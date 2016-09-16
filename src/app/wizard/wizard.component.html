@@ -1,0 +1,23 @@
+<div class="modal-backdrop fade in"></div>
+<div class="modal fade in modal--wizard" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Посчитаем, состоятельные кроты?</h3>
+      </div>
+      <div class="modal-body">
+        <p>Меня зовут Молли, и&nbsp;я&nbsp;расскажу вам, как тут всё устроено.</p>
+        <p>Транжира&nbsp;&mdash; это инструмент управления бюджетом. В&nbsp;нём вы&nbsp;задаёте свои счета, источники дохода, категории трат, а&nbsp;затем записываете траты, доходы или переводы между счетами.</p>
+        <p>Транжира показывает разнообразную статистику и&nbsp;позволяет оптимизировать расходы.</p>
+        <p>Если у&nbsp;вас установлено приложение на&nbsp;смартфоне, на&nbsp;который приходят смс-оповещения из&nbsp;банка о&nbsp;движении средств, Транжира будет записывать эти транзакции самостоятельно.</p>
+        <p>Сейчас я&nbsp;покажу вам, что нужно настроить, чтобы начать работу.</p>
+      </div>
+      <div class="modal-footer">
+        <div class="m-b-n-sm">
+          <span><button class="btn m-b-sm btn-primary" (click)="nextStep()" [disabled]="loading">Поехали!</button></span>
+          <span class="m-l-xs"><button class="btn m-b-sm btn-default" (click)="close()" [disabled]="loading">Спасибо, я&nbsp;и&nbsp;так разберусь</button></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

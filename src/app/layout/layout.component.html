@@ -1,0 +1,105 @@
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar_fixed">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-navbar" aria-expanded="false">
+        <span class="sr-only">Меню</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <span class="navbar-brand">Транжира</span>
+    </div>
+
+    <div class="collapse navbar-collapse" id="header-navbar" data-toggle="collapse" data-target="#header-navbar.collapse.in">
+      <ul class="nav navbar-nav main-menu">
+        <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--expenses">
+          <a routerLink="/expenses">Траты</a>
+        </li>
+        <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--income">
+          <a routerLink="/income">Доход</a>
+        </li>
+        <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--transfers">
+          <a routerLink="/transfers">Переводы</a>
+        </li>
+        <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--categories">
+          <a routerLink="/categories">Категории</a>
+        </li>
+        <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--income-categories">
+          <a routerLink="/income-categories">Источники</a>
+        </li>
+        <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--payment-methods">
+          <a routerLink="/payment-methods">Счета</a>
+        </li>
+        <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--history">
+          <a routerLink="/history">История</a>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+          <a (click)="resetWizard(); $event.preventDefault();"
+             tabindex="-1"
+             role="button"
+             id="main_menu_help"
+             data-trigger="manual"
+             data-container="#navbar_fixed"
+             data-placement="left"
+             data-content="Хорошо, о смельчак. Я в любой момент готова прийти на помощь вновь."
+             href=""><span>?</span></a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container navbar-padded">
+  <div class="media header" *ngIf="getProfile()">
+    <div class="media-left">
+      <div class="media-object user-avatar" [style]="profileImageStyle"></div>
+    </div>
+    <div class="media-body">
+      <h4 class="media-heading">Хэй, {{getProfile().getGivenName()}}!</h4>
+      <a (click)="signOut(); $event.preventDefault();" href=""><i class="fa fa-sign-out fa-lg"></i> Выйти</a>
+    </div>
+  </div>
+
+  <div>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="tab-pane active">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="management">
+    <h3>Остатки</h3>
+    <table class="table-remains" *ngIf="paymentMethods.length">
+      <tr *ngFor="let paymentMethod of paymentMethods"><td class="td-label">{{paymentMethod.name}}</td><td class="td-number">{{(+paymentMethod.initialAmount + +paymentMethod.incomes - +paymentMethod.expenses) | number:'1.2-2' }}</td></tr>
+    </table>
+    <h5 *ngIf="!paymentMethods.length">У вас нет ни одного счёта. <a routerLink="/payment-methods">Добавьте счета</a>, чтобы увидеть остатки по ним.</h5>
+  </div>
+
+  <app-copy></app-copy>
+</div>
+
+<div *ngIf="isLoginFormVisible()">
+  <div class="modal-backdrop fade in"></div>
+  <div class="modal fade in modal--login" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Пожалуйста, войдите</h3>
+        </div>
+        <div class="modal-body text-center">
+          <app-signin></app-signin>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-wizard *ngIf="isWizardModalVisible()"></app-wizard>
