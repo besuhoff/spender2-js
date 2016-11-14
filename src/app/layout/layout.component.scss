@@ -1,0 +1,43 @@
+.header {
+  padding: 20px 0;
+}
+
+.user-avatar {
+  width: 64px;
+  height: 64px;
+  margin-right: 10px;
+  background: center center no-repeat;
+  background-size: cover;
+}
+
+.tab-content .tab-pane {
+  border: 1px solid #ddd;
+  padding: 10px;
+
+  @media (min-width: 992px) {
+    padding: 10px 16px;
+  }
+}
+
+.management {
+  padding: 20px 0 18px;
+}
+
+
+.table-remains {
+  font-size: inherit;
+
+  td {
+    padding: 0 0 5px;
+
+    &.td-label {
+      font-weight: bold;
+    }
+
+    &.td-number {
+      text-align: right;
+      padding-left: 20px;
+      font-family: 'Fira Mono', arial, monospace;
+    }
+  }
+}

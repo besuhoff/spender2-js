@@ -1,0 +1,20 @@
+<div class="date-group">
+  <div class="date-setnow" (click)="setNow()">сброс</div>
+
+  <input type="text"
+         #ngbDatepicker="ngbDatepicker"
+         ngbDatepicker
+         (click)="ngbDatepicker.toggle()"
+         class="form-control date"
+         [disabled]="disabled"
+         navigation="arrows"
+         [(ngModel)]="date"
+         (ngModelChange)="value = $event">
+
+  <div class="time-group">
+    <ngb-timepicker ngDisabled="disabled"
+                    [(ngModel)]="time"
+                    meridian="true"
+                    (ngModelChange)="value = $event"></ngb-timepicker>
+  </div>
+</div>

@@ -11,6 +11,7 @@ import { IncomePageComponent } from './income-page/income-page.component';
 import { PaymentMethodsPageComponent } from './payment-methods-page/payment-methods-page.component';
 import { TransfersPageComponent } from './transfers-page/transfers-page.component';
 import { AuthGuard } from './auth-guard';
+import {ChartsPageComponent} from "./charts-page/charts-page.component";
 
 const appRoutes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -46,6 +47,10 @@ const appRoutes: Routes = [
             {
                 path: 'history',
                 component: HistoryPageComponent
+            },
+            {
+                path: 'charts',
+                component: ChartsPageComponent
             },
             {
                 path: '',

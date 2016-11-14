@@ -3,13 +3,16 @@ import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/operator/map';
+import 'rxjs/add/operator/share';
 import { HttpClientService } from "./http-client.service";
 
 export abstract class DataEntity {
-  id: number;
+  public id: number;
+  public _isRemoved: boolean;
 
-  constructor(private data: { id: number }, injector: Injector) {
+  constructor(private data: { id: number, _isRemoved?: boolean|string }, injector: Injector) {
     this.id = data.id;
+    this._isRemoved = !!+data._isRemoved;
   }
 
   abstract toUpdateData(): {};
@@ -44,8 +47,8 @@ export abstract class DataService<T extends DataEntity> {
     return this._entities.filter(entity => entity.id === id)[0];
   };
 
-  getListChangedAt(): Subject<number> {
-    return this._listChangedAt;
+  getListChangedAt(): Observable<number> {
+    return this._listChangedAt.asObservable().share();
   }
 
   recordListChange(): void {

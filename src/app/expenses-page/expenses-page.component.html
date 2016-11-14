@@ -1,3 +1,73 @@
-<p>
-  expenses-page works!
-</p>
+<div class="panel panel-default" *ngIf="isHintVisible()">
+  <div class="panel-heading">
+    <h3>Траты</h3>
+  </div>
+  <div class="panel-body">
+    <div class="m-b-md">
+      <p>Этим разделом вы&nbsp;будете пользоваться каждый день.</p>
+      <p>Записывайте расходы в&nbsp;формате &laquo;Потратил 100$ наличными на&nbsp;Транспорт 2016-08-06 10:25, комментарий: такси в&nbsp;аэропорт&raquo;. Валюту указывать не&nbsp;нужно, она подтянется сама из&nbsp;счёта, который вы&nbsp;укажете.</p>
+      <p>Воспользуйтесь ссылкой &laquo;сброс&raquo; в&nbsp;поле ввода даты и&nbsp;времени, чтобы сброить значения к&nbsp;текущему времени.</p>
+      <p>Созданные записи выводятся на&nbsp;странице истории (о&nbsp;ней чуть позже).</p>
+      <p>Поэкспериментируйте с&nbsp;тратами, после чего перейдём к&nbsp;доходам.</p>
+    </div>
+
+    <div class="button-holder m-b-n-sm">
+      <span><button class="btn m-b-sm btn-primary" (click)="nextStep()" [ladda]="loading">Перейти к доходам</button></span>
+      <span class="m-l-xs"><button class="btn m-b-sm btn-default " (click)="close()" [ladda]="loading">Мне больше не нужны подсказки</button></span>
+    </div>
+  </div>
+</div>
+
+<div class="form">
+  <a class="back-link" [hidden]="!editMode" routerLink="/history">&larr; Назад к истории</a>
+
+  <div>
+    Потратил <input autofocus class="form-control form-control--sm" type="number" name="amount" [(ngModel)]="expense.amount" step="0.01">
+    {{expense.paymentMethod?.currency?.symbol}}
+    <select class="form-control form-control--lg"
+            name="paymentMethod"
+            [(ngModel)]="expense.paymentMethod">
+      <option *ngFor="let paymentMethod of paymentMethods" [ngValue]="paymentMethod">{{ paymentMethod.name }}</option>
+    </select>
+    <span class="text-nowrap">
+      на <select class="form-control form-control--lg"
+                 name="category"
+                 [(ngModel)]="expense.category">
+      <option *ngFor="let category of categories" [ngValue]="category">{{ category.name }}</option>
+    </select>
+    </span>
+  </div>
+  <div>
+    Дата: <datetime name="createdAt" [(ngModel)]="expense.createdAt"></datetime>,
+    комментарий: <input class="form-control"
+                        name="comment"
+                        [(ngModel)]="expense.comment">
+    <div class="button-hint button-hint--lg">
+      <div class="button-hint__inner">
+        <button class="btn-primary btn btn-inline"
+                [disabled]="!canSave()"
+                (click)="save()">Записать транзакцию</button>
+        <div class="button-hint__text" [hidden]="canSave()">
+          Укажите {{ getRequirements() }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="charts" *ngIf="hasChart()">
+  <h3>Траты за {{this.startOfMonth | amDateFormat:'MMMM YYYY'}}</h3>
+  <div class="row">
+    <div class="col-md-6" *ngFor="let item of expensesChart">
+      <h4>{{item.currency}}</h4>
+        <canvas baseChart
+                class="chart"
+                [chartType]="'bar'"
+                [labels]="item.chartData.labels"
+                [options]="item.chartData.options"
+                [data]="item.chartData.data"
+                [colors]="item.chartData.colors"
+                [datasets]="item.chartData.datasets"></canvas>
+    </div>
+  </div>
+</div>

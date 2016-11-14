@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { MomentService } from './moment.service';
+import { Injectable, Inject } from '@angular/core';
+import * as moment from 'moment';
 
 function hex(hex) {
   if (/^#/.test(hex)) {
@@ -9,35 +9,43 @@ function hex(hex) {
     throw new Error("Invaild hex String");
   }
 
-  var digit = hex.split("");
+  let digit = hex.split("");
 
   if (digit.length === 3) {
     digit = [digit[0], digit[0], digit[1], digit[1], digit[2], digit[2]]
   }
-  var r = parseInt([digit[0], digit[1]].join(""), 16);
-  var g = parseInt([digit[2], digit[3]].join(""), 16);
-  var b = parseInt([digit[4], digit[5]].join(""), 16);
+  let r = parseInt([digit[0], digit[1]].join(""), 16);
+  let g = parseInt([digit[2], digit[3]].join(""), 16);
+  let b = parseInt([digit[4], digit[5]].join(""), 16);
   return [r, g, b];
 }
 
 @Injectable()
 export class ChartService {
 
-  constructor(private moment: MomentService) { }
+  constructor(@Inject('moment') private moment) { }
 
   protected _buildLineChart(chartMap, paymentMethodsMap, datesMap, datasetConfig) {
     datasetConfig = datasetConfig || {};
 
-    var chart = {};
+    let chart = {};
 
     // Fill everything with zeros
-    Object.keys(chartMap).forEach(function (currency) {
+    Object.keys(chartMap).forEach((currency) => {
       chart[currency] = {
         datasets: [],
         data: [],
+        colors: [],
         options: {
+          tooltips: {
+            mode: 'label'
+          },
           scales: {
             xAxes: [{
+              ticks: {
+                autoSkipPadding: 20,
+                maxRotation: 0
+              },
               type: 'category',
               barPercentage: 1.0,
               categoryPercentage: 1.0,
@@ -50,7 +58,7 @@ export class ChartService {
         }
       };
 
-      var datePoints = Object.keys(datesMap[currency]).sort(),
+      let datePoints = Object.keys(datesMap[currency]).sort(),
           startDateMoment = this.moment(datePoints[0], 'YYYY-MM-DD'),
           startDateMomentFormatted = startDateMoment.format('YYYY-MM-DD'),
           endDate = datePoints[datePoints.length - 1];
@@ -65,19 +73,27 @@ export class ChartService {
       }
 
       datePoints = datePoints.sort();
-      chart[currency].labels = datePoints;
+      let labels = datePoints.map((datePoint) => {
+        return this.moment(datePoint, 'YYYY-MM-DD').format('Do MMM');
+      });
 
-      Object.keys(paymentMethodsMap[currency]).forEach(function(paymentMethodId) {
-        var line = [];
+      chart[currency].labels = labels;
+
+      Object.keys(paymentMethodsMap[currency]).forEach((paymentMethodId) => {
+        let line = [];
 
         datePoints.forEach(function(date) {
           line.push(+((chartMap[currency][paymentMethodId] && chartMap[currency][paymentMethodId][date] || 0).toFixed(2)));
         });
 
-        var color = paymentMethodsMap[currency][paymentMethodId].color || '#bbb';
+        let color = paymentMethodsMap[currency][paymentMethodId].color || '#bbb';
 
         chart[currency].datasets.push(Object.assign({}, datasetConfig, {
-          label: paymentMethodsMap[currency][paymentMethodId].name,
+          data: line,
+          label: paymentMethodsMap[currency][paymentMethodId].name
+        }));
+
+        chart[currency].colors.push({
           borderColor: color,
           hoverBorderColor: color,
           backgroundColor: 'rgba(' + hex(color) + ',' + (datasetConfig.backgroundOpacity || '0.5') + ')',
@@ -86,9 +102,7 @@ export class ChartService {
           pointHoverBorderColor: color,
           pointHoverBackgroundColor: color,
           pointBackgroundColor: "#fff"
-        }));
-
-        chart[currency].data.push(line);
+        })
       });
     });
 
@@ -96,8 +110,8 @@ export class ChartService {
   }
 
   protected _fillInMaps(transactions, chartMap, paymentMethodsMap, datesMap) {
-    transactions.forEach(function(e) {
-      var currency = e.paymentMethod.currency.code,
+    transactions.forEach((e) => {
+      let currency = e.paymentMethod.currency.code,
           date = this.moment(e.createdAt).format('YYYY-MM-DD');
 
       if (!chartMap[currency]) {
@@ -130,14 +144,12 @@ export class ChartService {
   }
 
   buildTransactionsChart(transactions) {
-    var chartMap = {},
+    let chartMap = {},
         paymentMethodsMap = {},
         datesMap = {};
 
     // Don't include expenses/incomes for transfers
-    transactions = transactions.filter(function(transaction) {
-      return transaction.category || transaction.incomeCategory;
-    });
+    transactions = transactions.filter((transaction) => transaction.category || transaction.incomeCategory);
 
     // Create a widely rarefied matrix of transactions
     this._fillInMaps(transactions, chartMap, paymentMethodsMap, datesMap);
@@ -146,31 +158,31 @@ export class ChartService {
   };
 
   buildBalanceChart(expenses, incomes, paymentMethods) {
-    var chartMap = {},
+    let chartMap = {},
       paymentMethodsMap = {},
       datesMap = {},
       totalsMap = {};
 
     // Get all transactions sorted by reverse date order to do a retrospective analysis
-    var transactions = incomes.concat(
-      expenses.map(function(expense) {
-        var e = Object.create({}, expense);
+    let transactions = incomes.concat(
+      expenses.map((expense) => {
+        let e = Object.create({}, expense);
         e.amount *= -1;
         return e;
       })
-    ).sort(function(a, b) {
-      var diff = +this.moment(a.createdAt) - +this.moment(b.createdAt);
+    ).sort((a, b) => {
+      let diff = +this.moment(a.createdAt) - +this.moment(b.createdAt);
       return diff > 0 ? -1 : diff < 0 ? 1 : 0;
     });
 
     this._fillInMaps(transactions, chartMap, paymentMethodsMap, datesMap);
 
-    paymentMethods.forEach(function(paymentMethod) {
+    paymentMethods.forEach((paymentMethod) => {
       // set initial values for retrospective
       totalsMap[paymentMethod.id] = paymentMethod.initialAmount + paymentMethod.incomes - paymentMethod.expenses;
 
       // Add date points as initial dates
-      var currency = paymentMethod.currency.code,
+      let currency = paymentMethod.currency.code,
         date = this.moment(paymentMethod.createdAt).format('YYYY-MM-DD');
 
       if (!chartMap[currency]) {
@@ -201,8 +213,8 @@ export class ChartService {
       chartMap[currency][paymentMethod.id][date] += paymentMethod.initialAmount;
     });
 
-    Object.keys(chartMap).forEach(function(currency) {
-      var datePoints = Object.keys(datesMap[currency]).sort(),
+    Object.keys(chartMap).forEach((currency) => {
+      let datePoints = Object.keys(datesMap[currency]).sort(),
         startDateMoment = this.moment(datePoints[0], 'YYYY-MM-DD'),
         startDateMomentFormatted = startDateMoment.format('YYYY-MM-DD'),
         endDate = datePoints[datePoints.length - 1];
@@ -220,7 +232,7 @@ export class ChartService {
       datePoints.reverse();
 
       Object.keys(chartMap[currency]).forEach(function(paymentMethodId) {
-        var previousChange = 0;
+        let previousChange = 0;
         datePoints.forEach(function(date) {
           totalsMap[paymentMethodId] -= previousChange;
           previousChange = chartMap[currency][paymentMethodId][date] || 0;
@@ -234,17 +246,17 @@ export class ChartService {
 
   buildCategoriesChart(transactions, categoryKey) {
     // Don't include expenses/incomes for transfers
-    transactions = transactions.filter(function(transaction) {
+    transactions = transactions.filter((transaction) => {
       return transaction[categoryKey];
     });
 
-    var categoriesMap = {};
+    let categoriesMap = {};
 
     // Fill everything with zeros
-    var chart = {};
+    let chart = {};
 
-    transactions.forEach(function(e) {
-      var categoryId = e[categoryKey].id,
+    transactions.forEach((e) => {
+      let categoryId = e[categoryKey].id,
         currency = e.paymentMethod.currency.code;
 
       // Don't include expenses/incomes for transfers
@@ -267,13 +279,13 @@ export class ChartService {
       categoriesMap[currency][categoryId].total += e.amount;
     });
 
-    Object.keys(categoriesMap).map(function(currency) {
-      var colors = [],
+    Object.keys(categoriesMap).map((currency) => {
+      let colors = [],
         opacityColors = [],
         data = [],
         labels = [];
 
-      Object.keys(categoriesMap[currency]).map(function(key) {
+      Object.keys(categoriesMap[currency]).map((key) => {
         data.push(categoriesMap[currency][key].total.toFixed(2));
         labels.push(categoriesMap[currency][key].label);
         colors.push(categoriesMap[currency][key].color || '#bbb');

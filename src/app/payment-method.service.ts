@@ -27,7 +27,6 @@ export class PaymentMethod extends DataEntity {
   public incomes: number;
   public expenses: number;
   public initialAmount: number;
-  public _isRemoved: boolean;
   public currency: Currency;
   public createdAt: Date;
   public updatedAt: Date;
@@ -43,7 +42,6 @@ export class PaymentMethod extends DataEntity {
     this.initialAmount = +data.initialAmount;
     this.expenses = +data.expenses;
     this.incomes = +data.incomes;
-    this._isRemoved = !!+data._isRemoved;
     this.createdAt = new Date(data.createdAt);
     this.updatedAt = new Date(data.updatedAt);
 

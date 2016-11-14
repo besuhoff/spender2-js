@@ -20,7 +20,10 @@
     "@angular/platform-browser": "2.1.2",
     "@angular/platform-browser-dynamic": "2.1.2",
     "@angular/router": "3.0.0",
+    "@ng-bootstrap/ng-bootstrap": "1.0.0-alpha.14",
     "angular2-ladda": "1.0.6",
+    "angular2-moment": "1.0.0-beta.rc.1",
+    "chart.js": "2.3.0",
     "core-js": "^2.4.1",
     "moment": "2.15.1",
     "mozilla-fira-pack": "0.0.1",
@@ -31,6 +34,7 @@
   },
   "devDependencies": {
     "@types/jasmine": "^2.2.30",
+    "@types/node": "6.0.46",
     "angular-cli": "1.0.0-beta.19-3",
     "codelyzer": "~0.0.26",
     "jasmine-core": "2.4.1",

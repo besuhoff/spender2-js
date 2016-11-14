@@ -7,15 +7,14 @@ import { AuthService } from '../auth.service';
 import { WizardService } from '../wizard.service';
 import { UserService } from '../user.service';
 import { Profile } from '../gapi.service';
-import { MomentService } from '../moment.service';
 import {HttpClientService} from "../http-client.service";
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {Subscription} from "rxjs/Subscription";
 
 @Component({
-  selector: 'app-layout',
+  selector: 'layout',
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.css']
+  styleUrls: ['./layout.component.scss']
 })
 export class LayoutComponent implements OnInit {
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-copy',
+  selector: 'copy',
   templateUrl: './copy.component.html',
   styleUrls: ['./copy.component.css']
 })

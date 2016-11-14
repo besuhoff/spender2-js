@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-transfers-page',
+  selector: 'transfers-page',
   templateUrl: './transfers-page.component.html',
   styleUrls: ['./transfers-page.component.css']
 })

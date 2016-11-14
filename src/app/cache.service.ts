@@ -43,9 +43,9 @@ export class CacheService {
       [
         this.incomeService,
         this.expenseService,
-        this.paymentMethodService,
         this.incomeCategoryService,
         this.categoryService,
+        this.paymentMethodService,
         this.currencyService
       ].forEach(function(service) {
         service.recordListChange();

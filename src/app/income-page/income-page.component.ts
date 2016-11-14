@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-income-page',
+  selector: 'income-page',
   templateUrl: './income-page.component.html',
   styleUrls: ['./income-page.component.css']
 })

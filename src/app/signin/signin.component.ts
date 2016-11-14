@@ -5,7 +5,7 @@ import {GapiService} from "../gapi.service";
 import {HttpClientService} from "../http-client.service";
 
 @Component({
-  selector: 'app-signin',
+  selector: 'signin',
   templateUrl: './signin.component.html',
   styleUrls: ['./signin.component.css']
 })

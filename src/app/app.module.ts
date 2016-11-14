@@ -3,6 +3,14 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule, XHRBackend, RequestOptions } from '@angular/http';
 
+import * as moment from 'moment';
+import 'moment/locale/ru';
+import {MomentModule} from 'angular2-moment';
+import 'chart.js';
+import { ChartsModule } from 'ng2-charts/ng2-charts';
+import { LaddaModule } from 'angular2-ladda';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+
 import { AppComponent } from './app.component';
 import { CategoriesPageComponent } from './categories-page/categories-page.component';
 import { ExpensesPageComponent } from './expenses-page/expenses-page.component';
@@ -13,12 +21,17 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { PaymentMethodsPageComponent } from './payment-methods-page/payment-methods-page.component';
 import { TransfersPageComponent } from './transfers-page/transfers-page.component';
 import { LayoutComponent } from './layout/layout.component';
-
 import { WizardComponent } from './wizard/wizard.component';
 import { SigninComponent } from './signin/signin.component';
 import { CopyComponent } from './copy/copy.component';
 import { SpinnerComponent } from './spinner/spinner.component';
+import { LoaderComponent } from './loader/loader.component';
+import { ColorpickerComponent } from './colorpicker/colorpicker.component';
+import { DatetimeComponent } from './datetime/datetime.component';
+import { ChartsPageComponent } from './charts-page/charts-page.component';
 
+import { AuthGuard } from "./auth-guard";
+import {HttpClientService} from "./http-client.service";
 import { CacheService } from './cache.service';
 import { GapiService } from './gapi.service';
 import { ChartService } from './chart.service';
@@ -32,17 +45,9 @@ import { LoginService } from './login.service';
 import { AuthService } from './auth.service';
 import { WizardService } from './wizard.service';
 import { UserService } from './user.service';
-
-import { routing, appRoutingProviders } from './app.routing';
-
-import * as moment from 'moment';
-import { MomentService } from "./moment.service";
-import { AuthGuard } from "./auth-guard";
-import {HttpClientService} from "./http-client.service";
-import { LoaderComponent } from './loader/loader.component';
 import {LoaderService} from "./loader.service";
 
-import { LaddaModule } from 'angular2-ladda';
+import { routing, appRoutingProviders } from './app.routing';
 
 @NgModule({
   declarations: [
@@ -60,18 +65,24 @@ import { LaddaModule } from 'angular2-ladda';
     SigninComponent,
     CopyComponent,
     SpinnerComponent,
-    LoaderComponent
+    LoaderComponent,
+    ColorpickerComponent,
+    DatetimeComponent,
+    ChartsPageComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
     LaddaModule,
+    NgbModule.forRoot(),
+    ChartsModule,
+    MomentModule,
     routing
   ],
   providers: [
     appRoutingProviders,
-    { provide: MomentService, useValue: moment },
+    { provide: 'moment', useValue: moment },
     { provide: 'BACKEND_URL', useValue: 'https://spender-api.pereborstudio.com/' },
     { provide: 'GAPI_CLIENT_ID', useValue: '843225840486-ilkj47kggue9tvh6ajfvvog45mertgfg.apps.googleusercontent.com' },
     GapiService,

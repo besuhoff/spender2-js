@@ -7,25 +7,8 @@ body {
   min-width: 320px;
 }
 
-.header {
-  padding: 20px 0;
-}
-
-.user-avatar {
-  width: 64px;
-  height: 64px;
-  margin-right: 10px;
-  background: center center no-repeat;
-  background-size: cover;
-}
-
-.tab-content .tab-pane {
-  border: 1px solid #ddd;
-  padding: 10px;
-
-  @media (min-width: 992px) {
-    padding: 10px 16px;
-  }
+[hidden] {
+  display: none !important;
 }
 
 .btn {
@@ -109,98 +92,8 @@ body {
   }
 }
 
-.management {
-  padding: 20px 0 18px;
-}
-
-.list-form li {
-
-}
-
-.table-remains {
-  font-size: inherit;
-
-  td {
-    padding: 0 0 5px;
-
-    &.td-label {
-      font-weight: bold;
-    }
-
-    &.td-number {
-      text-align: right;
-      padding-left: 20px;
-      font-family: 'Fira Mono', arial, monospace;
-    }
-  }
-}
-
-.copy {
-  font-size: 85%;
-  padding: 12px 0;
-  color: #999;
-}
-
-
-.date-group {
-  display: inline-block;
-  position: relative;
-
-  .date-setnow {
-    cursor: pointer;
-    color: #158cba;
-    bottom: 0;
-    position: absolute;
-    right: 0;
-    font-size: 11px;
-    width: 44px;
-    text-align: center;
-    text-decoration: underline;
-  }
-
-  .dropdown-menu {
-    .btn-default {
-      border-width: 0;
-      border-radius: 0;
-    }
-
-    em {
-      font-size: 9px;
-    }
-  }
-
-  > * {
-    display: inline-block;
-  }
-
-  .form-control {
-    display: inline-block;
-    width: 32px;
-
-    &.date {
-      width: 76px;
-      text-align: right;
-    }
-  }
-
-  .time-group {
-    margin-bottom: -1px;
-    vertical-align: middle;
-
-    .uib-separator {
-      padding-bottom: 5px;
-      height: 38px;
-    }
-  }
-}
-
-
 .glyphicon {
   line-height: 1.5;
-}
-
-.main-menu {
-
 }
 
 .charts {
@@ -536,7 +429,7 @@ spinner {
   }
 
   &__text {
-    display: inline-block;
+    display: block;
     font-size: 10px;
     line-height: 14px;
     color: #999;

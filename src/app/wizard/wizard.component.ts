@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {WizardService} from "../wizard.service";
 
 @Component({
-  selector: 'app-wizard',
+  selector: 'wizard',
   templateUrl: './wizard.component.html',
   styleUrls: ['./wizard.component.css']
 })

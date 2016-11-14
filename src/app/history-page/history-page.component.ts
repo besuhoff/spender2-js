@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-history-page',
+  selector: 'history-page',
   templateUrl: './history-page.component.html',
   styleUrls: ['./history-page.component.css']
 })

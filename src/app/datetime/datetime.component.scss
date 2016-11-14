@@ -1,0 +1,105 @@
+.date-group {
+  display: inline-block;
+  position: relative;
+
+  .date-setnow {
+    cursor: pointer;
+    color: #158cba;
+    bottom: 15px;
+    position: absolute;
+    right: 0;
+    font-size: 12px;
+    line-height: normal;
+    width: 44px;
+    text-align: center;
+    text-decoration: underline;
+  }
+
+  .dropdown-menu {
+    .btn-default {
+      border-width: 0;
+      border-radius: 0;
+    }
+
+    em {
+      font-size: 9px;
+    }
+  }
+
+  > * {
+    display: inline-block;
+  }
+
+  .form-control {
+    display: inline-block;
+    width: 32px;
+
+    &.date {
+      width: 76px;
+      text-align: right;
+    }
+  }
+
+  .time-group {
+    vertical-align: middle;
+    text-align: center;
+
+    tr:first-of-type, tr:last-of-type {
+      line-height: 35px;
+    }
+
+    .form-control {
+      text-align: center;
+    }
+
+    .uib-separator {
+      padding-bottom: 5px;
+      height: 38px;
+    }
+
+    .btn-outline-primary {
+      color: #555;
+      background-color: #eee;
+      border-color: #e2e2e2;
+
+      &:hover {
+
+      }
+    }
+  }
+
+  ngb-datepicker {
+    background: #f8f8f8;
+    margin-left: -10px;
+
+    .btn-secondary {
+      padding: 0 10px;
+      line-height: 28px;
+    }
+
+    .text-xs-center.font-weight-bold {
+      font-weight: 600;
+      font-size: 18px;
+      text-align: center;
+      line-height: 34px;
+
+      &.weekday {
+        line-height: 28px;
+        font-size: 14px;
+      }
+    }
+
+    &-navigation {
+      table {
+        width: 100%;
+      }
+
+      .text-sm-left {
+        text-align: left;
+      }
+      .text-sm-right {
+        text-align: right;
+      }
+    }
+  }
+}
