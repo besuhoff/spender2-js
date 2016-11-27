@@ -1,8 +1,7 @@
 import { Component, OnInit, Injector, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import {WizardService} from "../wizard.service";
-import {Expense, ExpenseUpdateData} from "../expense.service";
-import {ExpenseService} from "../expense.service";
+import {Expense, ExpenseService} from "../expense.service";
 import * as moment from 'moment';
 import {ChartService} from "../chart.service";
 import {PaymentMethod, PaymentMethodService} from "../payment-method.service";
@@ -75,7 +74,6 @@ export class ExpensesPageComponent implements OnInit {
           this.router.navigate(['/history']);
         } else {
           this._initExpense();
-          this._initExpenses();
         }
       });
     }

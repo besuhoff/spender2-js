@@ -10,9 +10,9 @@ export abstract class DataEntity {
   public id: number;
   public _isRemoved: boolean;
 
-  constructor(private data: { id: number, _isRemoved?: boolean|string }, injector: Injector) {
+  constructor(data: { id: number, _isRemoved?: boolean|string }, injector: Injector) {
     this.id = data.id;
-    this._isRemoved = !!+data._isRemoved;
+    this._isRemoved = !!+(data._isRemoved || 0);
   }
 
   abstract toUpdateData(): {};
@@ -60,7 +60,7 @@ export abstract class DataService<T extends DataEntity> {
     this._entitiesDeferred = undefined;
   };
 
-  loadAll(reload: boolean): Observable<T[]> {
+  loadAll(reload: boolean = false): Observable<T[]> {
     if (!this._entitiesDeferred || reload) {
       this._entitiesDeferred = this._http.get(this._getEntityUrl())
         .map<T[]>((response: Response) => {
@@ -73,10 +73,10 @@ export abstract class DataService<T extends DataEntity> {
     return this._entitiesDeferred;
   };
 
-  add(data: {}, suppressListChange: boolean): Observable<T> {
+  add(data: {}, suppressListChange: boolean = false): Observable<T> {
     return this._http.post(this._getEntityUrl(), data)
       .map<T>(data => {
-        let entity = new (this._getEntityClass())(data, this.injector);
+        let entity = new (this._getEntityClass())(data.json(), this.injector);
         this._entities.push(entity);
         if (!suppressListChange) {
           this.recordListChange();
@@ -86,7 +86,7 @@ export abstract class DataService<T extends DataEntity> {
       });
   };
 
-  update(entity: T, suppressListChange): Observable<T> {
+  update(entity: T, suppressListChange: boolean = false): Observable<T> {
     return this._http.patch(this._getEntityUrl(entity.id), entity.toUpdateData()).map<T>(() => {
       if (!suppressListChange) {
         this.recordListChange();
@@ -96,7 +96,7 @@ export abstract class DataService<T extends DataEntity> {
     });
   };
 
-  delete(entity, suppressListChange): Observable<T> {
+  delete(entity, suppressListChange: boolean = false): Observable<T> {
     return this._http.delete(this._getEntityUrl(entity.id)).map<T>(() => {
       this._entities.splice(this._entities.indexOf(entity), 1);
       if (!suppressListChange) {
