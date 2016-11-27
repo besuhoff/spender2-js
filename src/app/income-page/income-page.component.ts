@@ -84,7 +84,7 @@ export class IncomePageComponent implements OnInit {
   }
 
   getRequirements(): string {
-    var requirements = [],
+    let requirements:string[] = [],
       validatedObject = this.income;
 
     if (!validatedObject.amount) {

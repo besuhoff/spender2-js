@@ -1,3 +1,72 @@
-<p>
-  transfers-page works!
-</p>
+<div class="panel panel-default" *ngIf="isHintVisible()">
+  <div class="panel-heading">
+    <h3>Переводы</h3>
+  </div>
+  <div class="panel-body">
+    <div class="m-b-md">
+      <p>Этот раздел в&nbsp;целом похож на&nbsp;предыдущие два, но&nbsp;есть несколько тонкостей.</p>
+      <p>Здесь вы&nbsp;переводите деньги с&nbsp;одного счёта на&nbsp;другой. Например, если вы&nbsp;обналичиваете в&nbsp;банкомате, это будет перевод со&nbsp;счёта &laquo;карта сбербанка&raquo; на&nbsp;счёт &laquo;наличные&raquo;.</p>
+      <p>Если вы&nbsp;при переводе конвертируете валюту, нужно дополнительно указать курс. Обычно в&nbsp;таких случаях речь идёт о&nbsp;покупке или продаже иностранной валюты. Например, если курс доллара к&nbsp;евро составляет 1.15, а&nbsp;вы&nbsp;покупаете евро за&nbsp;доллары, то&nbsp;курс нужно указать как &laquo;1.15&nbsp;к 1&raquo; (иначе говоря, вы&nbsp;покупаете 100 евро за&nbsp;115&nbsp;долларов). Если&nbsp;же на&nbsp;доллары вы&nbsp;купили рубли, то&nbsp;курс будет, например, 1&nbsp;к 64.</p>
+      <p>Курс нужно вводить, когда валюта целевого счёта отличается от&nbsp;валюты платёжного средства.</p>
+      <p>Тут&nbsp;же переводите деньги на&nbsp;счета других пользователей Транжиры. Например, если вы&nbsp;дали супругу или супруге 500&nbsp;долларов, это можно оформить как перевод с&nbsp;вашего долларового счёта на&nbsp;его (её)&nbsp;счёт. Для этого ей&nbsp;нужно расшарить свой долларовый счёт вам в&nbsp;настройках счёта.</p>
+      <p>Поэкспериментируйте с&nbsp;переводами, после чего перейдём к&nbsp;последнему разделу&nbsp;&mdash; истории платежей.</p>
+    </div>
+
+    <div class="button-holder m-b-n-sm">
+      <span><button class="btn m-b-sm btn-primary" (click)="nextStep()" [ladda]="loading">Перейти к истории</button></span>
+      <span class="m-l-xs"><button class="btn m-b-sm btn-default " (click)="close()" [ladda]="loading">Мне больше не нужны подсказки</button></span>
+    </div>
+  </div>
+</div>
+
+<div class="form">
+  <a class="back-link" [hidden]="!editMode" routerLink="/history">&larr; Назад к истории</a>
+
+  <div>
+    Перевёл <input autofocus class="form-control form-control--sm" type="number" name="amount" [(ngModel)]="expense.amount" step="0.01">
+    {{expense.paymentMethod?.currency?.symbol}}
+    <select class="form-control form-control--lg"
+            name="expensePaymentMethod"
+            [(ngModel)]="expense.paymentMethod">
+      <option value="">- платёжным средством -</option>
+      <option *ngFor="let paymentMethod of paymentMethods" 
+              [ngValue]="paymentMethod"
+              [disabled]="income.paymentMethod && income.paymentMethod.id === paymentMethod.id">{{ paymentMethod.name }}</option>
+    </select>
+    <span class="text-nowrap">
+      на <select class="form-control form-control--lg"
+                 name="incomePaymentMethod"
+                 [(ngModel)]="income.paymentMethod">
+      <option value="">- платёжное средство -</option>
+      <option *ngFor="let paymentMethod of paymentMethods" 
+              [ngValue]="paymentMethod" 
+              [disabled]="expense.paymentMethod && expense.paymentMethod.id === paymentMethod.id">{{ paymentMethod.name }}</option>
+    </select>
+    </span>
+    <span *ngIf="expense.paymentMethod && income.paymentMethod && expense.paymentMethod.currency.id !== income.paymentMethod.currency.id">
+      по&nbsp;курсу <input class="form-control form-control--sm" type="number" [(ngModel)]="sourceIncomeCurrencyRate">
+      <span class="text-nowrap">к <input class="form-control form-control--sm" type="number" [(ngModel)]="targetIncomeCurrencyRate"></span>
+    </span>
+  </div>
+
+  <div *ngIf="getTargetAmount() !== null" class="form__hint">
+    ({{income.paymentMethod.currency.code}} {{getTargetAmount() | number:'1.2-2'}} будет начислено на счёт «{{income.paymentMethod.name}}»)
+  </div>
+
+  <div>
+    Дата: <datetime name="createdAt" [(ngModel)]="expense.createdAt"></datetime>,
+    комментарий: <input class="form-control"
+                        name="comment"
+                        [(ngModel)]="expense.comment">
+    <div class="button-hint button-hint--lg">
+      <div class="button-hint__inner">
+        <button class="btn-primary btn btn-inline"
+                [disabled]="!canSave()"
+                (click)="save()">Записать транзакцию</button>
+        <div class="button-hint__text" [hidden]="canSave()">
+          Укажите {{ getRequirements() }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

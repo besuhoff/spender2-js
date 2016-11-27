@@ -84,7 +84,7 @@ export class ExpensesPageComponent implements OnInit {
   }
 
   getRequirements(): string {
-    var requirements = [],
+    let requirements:string[] = [],
       validatedObject = this.expense;
 
     if (!validatedObject.amount) {
