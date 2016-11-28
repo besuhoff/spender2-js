@@ -2,16 +2,32 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import { UserService } from './user.service';
+import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {WizardComponent} from './wizard/wizard.component';
 
 @Injectable()
 export class WizardService {
 
   private _isHelpHintShown: boolean = false;
+  private modalRef: NgbModalRef;
+
+  private _openModal() {
+    this.modalRef = this.ngbModal.open(WizardComponent, {
+      windowClass: 'modal--wizard'
+    });
+
+    this.modalRef.componentInstance.init(this);
+  }
 
   constructor(
     private userService: UserService,
-    private router: Router
-  ) { }
+    private router: Router,
+    private ngbModal: NgbModal
+  ) {
+    if (this.hasModal()) {
+      this._openModal();
+    }
+  }
 
   step(): number {
     return this.userService.get() && this.userService.get().wizardStep || -1;
@@ -89,17 +105,20 @@ export class WizardService {
 
   nextStep() {
     return this.userService.update({ wizardStep: this.step() + 1 }).map((data) => {
+      this.modalRef.close();
       this.goToCurrentHint();
       return data;
     });
   }
 
   reset() {
+    this._openModal();
     return this.userService.update({ wizardStep: 1 });
   }
 
   close() {
     return this.userService.update({ wizardStep: -1 }).map((data) => {
+      this.modalRef.close();
       this._isHelpHintShown = true;
 
       setTimeout(() => {

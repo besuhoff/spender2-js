@@ -74,7 +74,11 @@ import { routing, appRoutingProviders } from './app.routing';
     BrowserModule,
     FormsModule,
     HttpModule,
-    LaddaModule,
+    LaddaModule.forRoot({
+      style: 'slide-right',
+      spinnerColor: '#2D2B29'
+
+    }),
     NgbModule.forRoot(),
     ChartsModule,
     MomentModule,
@@ -109,6 +113,7 @@ import { routing, appRoutingProviders } from './app.routing';
     AuthGuard,
     LoaderService
   ],
+  entryComponents: [WizardComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

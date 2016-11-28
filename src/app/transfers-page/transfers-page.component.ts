@@ -74,6 +74,8 @@ export class TransfersPageComponent implements OnInit {
 
   save() {
     if (this.getTargetAmount() !== undefined) {
+      this.loading = true;
+
       this.income.amount = this.getTargetAmount();
       this.income.comment = this.expense.comment;
       this.income.createdAt = this.expense.createdAt;
@@ -86,6 +88,7 @@ export class TransfersPageComponent implements OnInit {
           } else {
             this._initTransfer();
           }
+          this.loading = false;
         });
 
       });

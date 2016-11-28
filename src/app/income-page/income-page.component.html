@@ -45,6 +45,7 @@
       <div class="button-hint__inner">
         <button class="btn-primary btn btn-inline"
                 [disabled]="!canSave()"
+                [ladda]="loading"
                 (click)="save()">Записать транзакцию</button>
         <div class="button-hint__text" [hidden]="canSave()">
           Укажите {{ getRequirements() }}

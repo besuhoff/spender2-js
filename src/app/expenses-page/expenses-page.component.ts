@@ -68,6 +68,8 @@ export class ExpensesPageComponent implements OnInit {
   }
 
   save() {
+    this.loading = true;
+
     if (this.expense.category && this.expense.paymentMethod) {
       this.expenseService[!this.editMode ? 'add' : 'update'](this.expense.toUpdateData()).subscribe(() => {
         if (this.editMode) {
@@ -75,6 +77,8 @@ export class ExpensesPageComponent implements OnInit {
         } else {
           this._initExpense();
         }
+
+        this.loading = false;
       });
     }
   }

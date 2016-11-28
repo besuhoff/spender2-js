@@ -43,10 +43,6 @@ export class LayoutComponent implements OnInit {
     return this.loginService.isFormVisible();
   }
 
-  isWizardModalVisible(): boolean {
-    return this.wizardService.hasModal();
-  }
-
   resetWizard() {
     return this.wizardService.reset().subscribe(() => {});
   }

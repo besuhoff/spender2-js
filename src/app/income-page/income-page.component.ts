@@ -68,6 +68,8 @@ export class IncomePageComponent implements OnInit {
   }
 
   save() {
+    this.loading = true;
+
     if (this.income.incomeCategory && this.income.paymentMethod) {
       this.incomeService[!this.editMode ? 'add' : 'update'](this.income.toUpdateData()).subscribe(() => {
         if (this.editMode) {
@@ -75,6 +77,8 @@ export class IncomePageComponent implements OnInit {
         } else {
           this._initIncome();
         }
+
+        this.loading = false;
       });
     }
   }

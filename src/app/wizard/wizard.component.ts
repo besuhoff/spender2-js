@@ -8,22 +8,31 @@ import {WizardService} from "../wizard.service";
 })
 export class WizardComponent implements OnInit {
 
-  private loading: boolean = false;
+  private loading = {
+    data: false,
+    nextStep: false,
+    closing: false
+  };
+  private wizardService: WizardService;
 
-  constructor(private wizardService: WizardService) { }
+  constructor() { }
 
   ngOnInit() {
   }
 
-  nextStep() {
-    this.loading = true;
+  init(wizardService: WizardService) {
+    this.wizardService = wizardService;
+  }
 
-    return this.wizardService.nextStep().subscribe(() => this.loading = false);
+  nextStep() {
+    this.loading.data = this.loading.nextStep = true;
+
+    return this.wizardService.nextStep().subscribe(() => this.loading.data = this.loading.nextStep = false);
   }
 
   close() {
-    this.loading = true;
+    this.loading.data = this.loading.closing = true;
 
-    return this.wizardService.close().subscribe(() => this.loading = false);
+    return this.wizardService.close().subscribe(() => this.loading.data = this.loading.closing = false);
   }
 }
