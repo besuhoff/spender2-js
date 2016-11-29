@@ -31,8 +31,6 @@ export class SigninComponent implements OnInit {
           // Useful data for your client-side scripts:
           let profile = googleUser.getBasicProfile();
           zone.run(() => {
-            httpClientService.setAuthHeader(googleUser.getAuthResponse().id_token);
-
             component.isLoading = true;
 
             authService.setProfile(profile).subscribe(() => {

@@ -23,8 +23,6 @@ export class AuthGuard implements CanActivate {
           let currentUser = gapi.auth2.getAuthInstance().currentUser.get();
 
           if (currentUser && currentUser.isSignedIn()) {
-            this.httpClientService.setAuthHeader(currentUser.getAuthResponse().id_token);
-
             return this.authService.setProfile(currentUser.getBasicProfile()).toPromise().then(() => {
               return Promise.resolve(true);
             });

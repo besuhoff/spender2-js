@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GapiService } from '../gapi.service';
 import { PaymentMethod, PaymentMethodService } from '../payment-method.service';
-import { LoginService } from '../login.service';
 import { AuthService } from '../auth.service';
 import { WizardService } from '../wizard.service';
 import { UserService } from '../user.service';
@@ -32,15 +31,9 @@ export class LayoutComponent implements OnInit {
         this.authService.reset();
         this.userService.reset();
 
-        this.httpClientService.unsetAuthHeader();
-
         this.router.navigate(['/login']);
       });
     });
-  }
-
-  isLoginFormVisible(): boolean {
-    return this.loginService.isFormVisible();
   }
 
   resetWizard() {
@@ -50,7 +43,6 @@ export class LayoutComponent implements OnInit {
   constructor(
       private gapiService: GapiService,
       private paymentMethodService: PaymentMethodService,
-      private loginService: LoginService,
       private authService: AuthService,
       private wizardService: WizardService,
       private userService: UserService,

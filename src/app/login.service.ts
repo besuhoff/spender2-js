@@ -1,18 +1,23 @@
 import { Injectable } from '@angular/core';
+import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import {LoginFormComponent} from './login-form/login-form.component';
 
 @Injectable()
 export class LoginService {
-  protected _isFormVisible: boolean = false;
 
-  isFormVisible() {
-    return this._isFormVisible;
-  };
+  private modalRef: NgbModalRef;
+
+  constructor(private ngbModal: NgbModal) {
+
+  }
 
   showForm() {
-    this._isFormVisible = true;
+    this.modalRef = this.ngbModal.open(LoginFormComponent, {
+      windowClass: 'modal--wizard'
+    });
   };
 
   hideForm() {
-    this._isFormVisible = false;
+    this.modalRef.close();
   };
 }

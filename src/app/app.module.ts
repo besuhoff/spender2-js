@@ -48,6 +48,7 @@ import { UserService } from './user.service';
 import {LoaderService} from "./loader.service";
 
 import { routing, appRoutingProviders } from './app.routing';
+import { LoginFormComponent } from './login-form/login-form.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,8 @@ import { routing, appRoutingProviders } from './app.routing';
     LoaderComponent,
     ColorpickerComponent,
     DatetimeComponent,
-    ChartsPageComponent
+    ChartsPageComponent,
+    LoginFormComponent
   ],
   imports: [
     BrowserModule,
@@ -94,10 +96,10 @@ import { routing, appRoutingProviders } from './app.routing';
     HttpClientService,
     {
       provide: HttpClientService,
-      useFactory: (backend: XHRBackend, options: RequestOptions) => {
-        return new HttpClientService(backend, options);
+      useFactory: (backend: XHRBackend, options: RequestOptions, gapiService: GapiService) => {
+        return new HttpClientService(backend, options, gapiService);
       },
-      deps: [XHRBackend, RequestOptions]
+      deps: [XHRBackend, RequestOptions, GapiService]
     },
     IncomeService,
     ExpenseService,
