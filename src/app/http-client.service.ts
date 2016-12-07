@@ -51,10 +51,6 @@ export class HttpClientService extends Http {
 
           return true;
         }
-      )).mergeMap(() => {
-      console.log(options);
-
-        return super.request(url, options);
-      });
+      )).mergeMap(() => super.request(url, options));
   }
 }

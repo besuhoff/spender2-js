@@ -1,3 +1,2 @@
-<p>
-  spinner works!
-</p>
+<span class="spinner__indicator" *ngIf="isPending"></span>
+<div class="spinner__message" *ngIf="isSaved" [ngClass]="{ 'fa fa-check': isSaved }"></div>

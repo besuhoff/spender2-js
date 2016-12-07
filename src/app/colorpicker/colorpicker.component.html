@@ -1,3 +1,16 @@
-<p>
-  colorpicker works!
-</p>
+<div class="btn btn-sm btn-default btn-colorpicker" (click)="!disabled && isOpen = !isOpen;">
+    <span class="color"
+          [style.backgroundColor]="value"
+          [ngClass]="{ 'fa fa-lg fa-eyedropper': !value }">
+
+    </span>
+    <span class="colors" [hidden]="!isOpen">
+        <span class="color"
+              (click)="value = color"
+              [style.backgroundColor]="color"
+              [class.selected]="value === color"
+              [ngClass]="{ 'disabled fa fa-check': isOptionsDisabled(color) && value !== color }"
+              *ngFor="let color of colors"></span>
+        <span class="color color-clear fa fa-close" (click)="value = null"></span>
+    </span>
+</div>

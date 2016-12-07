@@ -1,4 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injector, Inject } from '@angular/core';
+import { Router } from '@angular/router';
+import {Expense} from "../expense.service";
+import {PaymentMethod} from "../payment-method.service";
+import {Category} from "../category.service";
+import {Subscription} from "rxjs/Subscription";
+import {WizardService} from "../wizard.service";
+import {ExpenseService} from "../expense.service";
+import {ChartService} from "../chart.service";
+import {CategoryService} from "../category.service";
+import {PaymentMethodService} from "../payment-method.service";
 
 @Component({
   selector: 'categories-page',
@@ -7,9 +17,116 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CategoriesPageComponent implements OnInit {
 
-  constructor() { }
+  private loading = false;
+  private isLoaded = {};
+  private category: Category;
+  private expenses: Expense[] = [];
+  private lastMonthExpenses: Expense[] = [];
+  private paymentMethods: PaymentMethod[] = [];
+  private categories: Category[] = [];
+  private startOfMonth: Date;
+  private categoriesChart = [];
+  private expenseServiceListChangedAt: Subscription;
+  private isNewLoaded: Promise<Category>;
+  private selectedColors: string[];
+
+  
+  private _initCategories() {
+    this.expenses = this.expenseService.getAll().filter(function(item) { return !item._isRemoved; });
+    this.lastMonthExpenses = this.expenses.filter((item) => +item.createdAt >= +this.startOfMonth);
+
+    this.categories = this.categoryService.getAll().filter(function(item) { return !item._isRemoved; });
+
+    let chart = this.chartService.buildCategoriesChart(this.lastMonthExpenses, 'category');
+    this.categoriesChart = Object.keys(chart).map((currency) => ({ currency, chartData: chart[currency] }));
+  }
+
+  private _initCategory() {
+    this.category = new Category({}, this.injector);
+    this.isNewLoaded = null;
+  }
+
+  public saveCategory(category) {
+    if (category.name) {
+      this.isLoaded[category.id] = this.categoryService.update(category).toPromise().then(() => {
+        this._initCategories();
+      });
+    }
+  };
+
+  public addCategory() {
+    if (this.category.name) {
+      this.isNewLoaded = this.categoryService.add(this.category).toPromise().then(() => {
+        this._initCategories();
+        this._initCategory();
+      });
+
+      return this.isNewLoaded;
+    }
+  };
+
+  public deleteCategory(category) {
+    this.isLoaded[category.id] = this.categoryService.delete(category).toPromise().then(() => {
+      this._initCategories();
+    });
+  }
+
+  public updateSelectedColors() {
+    this.selectedColors = this.categories.map((c) => c.color);
+    if (this.category.color) {
+      this.selectedColors.push(this.category.color);
+    }
+  };
+
+  public hasChart() {
+    return this.categoriesChart.length > 0;
+  };
+
+
+  constructor(
+    private wizardService: WizardService,
+    private expenseService: ExpenseService,
+    private chartService: ChartService,
+    private categoryService: CategoryService,
+    private paymentMethodService: PaymentMethodService,
+    private router: Router,
+    private injector: Injector,
+    @Inject('moment') private moment
+  ) {
+
+    this.startOfMonth = moment().startOf('month').toDate();
+
+    this.expenseServiceListChangedAt = this.expenseService.getListChangedAt().subscribe(() => {
+      this._initCategories();
+    });
+
+    this._initCategory();
+    this._initCategories();
+
+    this.isLoaded = {};
+    this.updateSelectedColors();
+  }
 
   ngOnInit() {
   }
 
+  isHintVisible(): boolean {
+    return this.wizardService.isExpenseHintVisible();
+  }
+
+  nextStep() {
+    this.loading = true;
+
+    return this.wizardService.nextStep().subscribe(() => this.loading = false);
+  }
+
+  close() {
+    this.loading = true;
+
+    return this.wizardService.close().subscribe(() => this.loading = false);
+  }
+
+  ngOnDestroy() {
+    this.expenseServiceListChangedAt && this.expenseServiceListChangedAt.unsubscribe();
+  }
 }

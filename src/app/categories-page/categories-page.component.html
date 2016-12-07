@@ -1,3 +1,72 @@
-<p>
-  categories-page works!
-</p>
+<div class="panel panel-default" *ngIf="isHintVisible()">
+  <div class="panel-heading">
+    <h3>Категории трат</h3>
+  </div>
+  <div class="panel-body">
+    <div class="m-b-md">
+      <p>Задайте категории своих трат. Для примера я&nbsp;выбрала пятнадцать популярных. Удалите&nbsp;те, которые не&nbsp;подходят вам, и&nbsp;добавьте&nbsp;те, которые я&nbsp;упустила.</p>
+      <p>Обратите внимание, что каждой категории можно назначить цвет. Он&nbsp;будет использован при выводе графика трат категории. Если не&nbsp;указать цвет, её&nbsp;сектор будет выведен серым.</p>
+      <p>Когда закончите с&nbsp;категориями, я&nbsp;провожу вас по&nbsp;настройкам счетов.</p>
+    </div>
+
+    <div class="button-holder m-b-n-sm">
+      <span><button class="btn m-b-sm btn-primary" (click)="nextStep()" [ladda]="loading">Перейти к настройкам счетов</button></span>
+      <span class="m-l-xs"><button class="btn m-b-sm btn-default " (click)="close()" [ladda]="loading">Мне больше не нужны подсказки</button></span>
+    </div>
+  </div>
+</div>
+
+<div class="form">
+  <div class="row">
+    <div class="col-sm-6">
+      <ul class="list-unstyled list-form">
+        <li *ngFor="let category of categories">
+          <input class="form-control"
+                 type="text"
+                 placeholder="Название"
+                 [(ngModel)]="category.name"
+                 (ngModelChange)="saveCategory(category)">
+          <colorpicker [(ngModel)]="category.color"
+                       [disabledOptions]="selectedColors"
+                       (ngModelChange)="updateSelectedColors(); saveCategory(category)">
+
+          </colorpicker>
+          <spinner [isLoaded]="isLoaded[category.id]"></spinner>
+          <button class="btn-default btn-sm btn btn-inline" (click)="deleteCategory(category)"><i class="fa fa-lg fa-remove"></i></button>
+        </li>
+
+        <li>
+          <input class="form-control" type="text" placeholder="Название" [(ngModel)]="category.name">
+          <colorpicker [(ngModel)]="category.color"
+                       [disabledOptions]="selectedColors"
+                       (ngModelChange)="updateSelectedColors()">
+
+          </colorpicker>
+          <spinner [isLoaded]="isNewLoaded"></spinner>
+          <button class="btn-primary btn-sm btn btn-inline"
+                  (click)="addCategory()"
+                  [disabled]="!category.name"><i class="fa fa-lg fa-plus"></i></button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="col-sm-6">
+      <div class="charts" *ngIf="hasChart()">
+        <h3>Распределение за {{this.startOfMonth | amDateFormat:'MMMM YYYY'}}</h3>
+        <div class="row">
+          <div class="col-md-6" *ngFor="let item of categoriesChart">
+            <h4>{{item.currency}}</h4>
+            <canvas baseChart
+                    class="chart"
+                    [chartType]="'pie'"
+                    [labels]="item.chartData.labels"
+                    [options]="item.chartData.options"
+                    [data]="item.chartData.data"
+                    [colors]="item.chartData.colors"
+                    [datasets]="item.chartData.datasets"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

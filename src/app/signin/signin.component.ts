@@ -25,7 +25,6 @@ export class SigninComponent implements OnInit {
     let component = this;
 
     gapiService.load().then(function(gapi) {
-      console.log(element.nativeElement);
       gapi.auth2.getAuthInstance().attachClickHandler(element.nativeElement, {},
         (googleUser) => {
           // Useful data for your client-side scripts:

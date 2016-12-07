@@ -296,7 +296,8 @@ export class ChartService {
         labels: labels,
         data: [data],
         options: {},
-        datasets: [{
+        datasets: [],
+        colors: [{
           borderColor: colors,
           hoverBorderColor: colors,
           backgroundColor: colors,

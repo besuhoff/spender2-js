@@ -72,7 +72,6 @@ export class DatetimeComponent implements OnInit, ControlValueAccessor {
     this.date = datetime ? this._momentToDateStruct(this.moment(datetime)) : null;
 
     this._value = value;
-    this.onChange(value);
   }
 
   setDisabledState(isDisabled: boolean) : void {
