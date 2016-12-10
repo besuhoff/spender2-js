@@ -1,14 +1,11 @@
 import { Component, OnInit, Injector, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import {Expense} from "../expense.service";
-import {PaymentMethod} from "../payment-method.service";
-import {Category} from "../category.service";
 import {Subscription} from "rxjs/Subscription";
 import {WizardService} from "../wizard.service";
-import {ExpenseService} from "../expense.service";
+import {Expense, ExpenseService} from "../expense.service";
 import {ChartService} from "../chart.service";
-import {CategoryService} from "../category.service";
-import {PaymentMethodService} from "../payment-method.service";
+import {Category, CategoryService} from "../category.service";
+import {PaymentMethod, PaymentMethodService} from "../payment-method.service";
 
 @Component({
   selector: 'categories-page',
