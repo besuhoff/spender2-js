@@ -280,29 +280,37 @@ export class ChartService {
     });
 
     Object.keys(categoriesMap).map((currency) => {
-      let colors = [],
-        opacityColors = [],
-        data = [],
-        labels = [];
+      let colors = {
+          borderColor: [],
+          hoverBorderColor: [],
+          backgroundColor: [],
+          hoverBackgroundColor: []
+        },
+        labels = [],
+        data = [];
 
       Object.keys(categoriesMap[currency]).map((key) => {
         data.push(categoriesMap[currency][key].total.toFixed(2));
         labels.push(categoriesMap[currency][key].label);
-        colors.push(categoriesMap[currency][key].color || '#bbb');
-        opacityColors.push('rgba(' + hex(colors[colors.length - 1]) + ',0.5)');
+
+        let color = categoriesMap[currency][key].color || '#bbb';
+
+        colors.borderColor.push(color);
+        colors.hoverBorderColor.push(color);
+        colors.backgroundColor.push(color);
+        colors.hoverBackgroundColor.push('rgba(' + hex(color) + ',0.5)');
       });
 
       chart[currency] = {
         labels: labels,
-        data: [data],
-        options: {},
-        datasets: [],
-        colors: [{
-          borderColor: colors,
-          hoverBorderColor: colors,
-          backgroundColor: colors,
-          hoverBackgroundColor: opacityColors
-        }]
+        data: data,
+        colors: [colors],
+        options: {
+          maintainAspectRatio: false,
+          legend: {
+            display: false
+          }
+        }
       };
     });
 

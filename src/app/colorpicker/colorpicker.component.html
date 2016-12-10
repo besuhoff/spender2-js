@@ -11,6 +11,6 @@
               [class.selected]="value === color"
               [ngClass]="{ 'disabled fa fa-check': isOptionsDisabled(color) && value !== color }"
               *ngFor="let color of colors"></span>
-        <span class="color color-clear fa fa-close" (click)="value = null"></span>
+        <span class="color color-clear fa fa-close" (click)="value = null" [class.selected]="!value"></span>
     </span>
 </div>
