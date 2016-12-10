@@ -6,6 +6,7 @@ import {Income, IncomeService} from "../income.service";
 import {ChartService} from "../chart.service";
 import {IncomeCategory, IncomeCategoryService} from "../income-category.service";
 import {PaymentMethod, PaymentMethodService} from "../payment-method.service";
+import Timer = NodeJS.Timer;
 
 @Component({
   selector: 'income-categories-page',
@@ -26,7 +27,7 @@ export class IncomeCategoriesPageComponent implements OnInit {
   private incomeServiceListChangedAt: Subscription;
   private isNewLoaded: Promise<IncomeCategory>;
   private selectedColors: string[];
-
+  private _debounceTimeout: Timer;
 
   private _initCategories() {
     this.income = this.incomeService.getAll().filter(function(item) { return !item._isRemoved; });
@@ -45,9 +46,15 @@ export class IncomeCategoriesPageComponent implements OnInit {
 
   public saveCategory(category) {
     if (category.name) {
-      this.isLoaded[category.id] = this.incomeCategoryService.update(category).toPromise().then(() => {
-        this._initCategories();
-      });
+      if (this._debounceTimeout) {
+        clearTimeout(this._debounceTimeout);
+      }
+
+      this._debounceTimeout = setTimeout(() => {
+        this.isLoaded[category.id] = this.incomeCategoryService.update(category).toPromise().then(() => {
+          this._initCategories();
+        });
+      }, 300);
     }
   };
 

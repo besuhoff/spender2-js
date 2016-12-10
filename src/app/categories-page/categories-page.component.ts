@@ -6,6 +6,7 @@ import {Expense, ExpenseService} from "../expense.service";
 import {ChartService} from "../chart.service";
 import {Category, CategoryService} from "../category.service";
 import {PaymentMethod, PaymentMethodService} from "../payment-method.service";
+import Timer = NodeJS.Timer;
 
 @Component({
   selector: 'categories-page',
@@ -26,6 +27,7 @@ export class CategoriesPageComponent implements OnInit {
   private expenseServiceListChangedAt: Subscription;
   private isNewLoaded: Promise<Category>;
   private selectedColors: string[];
+  private _debounceTimeout: Timer;
 
   
   private _initCategories() {
@@ -45,9 +47,15 @@ export class CategoriesPageComponent implements OnInit {
 
   public saveCategory(category) {
     if (category.name) {
-      this.isLoaded[category.id] = this.categoryService.update(category).toPromise().then(() => {
-        this._initCategories();
-      });
+      if (this._debounceTimeout) {
+        clearTimeout(this._debounceTimeout);
+      }
+
+      this._debounceTimeout = setTimeout(() => {
+        this.isLoaded[category.id] = this.categoryService.update(category).toPromise().then(() => {
+          this._initCategories();
+        });
+      }, 300);
     }
   };
 
