@@ -21,7 +21,7 @@
   <a class="back-link" [hidden]="!editMode" routerLink="/history">&larr; Назад к истории</a>
 
   <div>
-    Получил <input autofocus class="form-control form-control--sm" type="number" name="amount" [(ngModel)]="income.amount" step="0.01">
+    Получил <input autofocus class="form-control form-control--sm" type="number" name="amount" [(ngModel)]="income.amount" placeholder="0.00">
     {{income.paymentMethod?.currency?.symbol}}
     <select class="form-control form-control--lg"
             name="paymentMethod"

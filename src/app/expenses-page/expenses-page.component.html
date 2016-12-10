@@ -22,7 +22,7 @@
   <a class="back-link" [hidden]="!editMode" routerLink="/history">&larr; Назад к истории</a>
 
   <div>
-    Потратил <input autofocus class="form-control form-control--sm" type="number" name="amount" [(ngModel)]="expense.amount" step="0.01">
+    Потратил <input autofocus class="form-control form-control--sm" type="number" name="amount" [(ngModel)]="expense.amount" placeholder="0.00">
     {{expense.paymentMethod?.currency?.symbol}}
     <select class="form-control form-control--lg"
             name="paymentMethod"
