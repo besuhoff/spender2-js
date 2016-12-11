@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import * as moment from 'moment';
 
 @Component({
@@ -7,7 +7,6 @@ import * as moment from 'moment';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app works!';
 
   constructor() {
     moment.locale('ru');

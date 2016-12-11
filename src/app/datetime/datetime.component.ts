@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Input, forwardRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, forwardRef, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgbInputDatepicker, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
 import { NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap/timepicker/timepicker.module';

@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, Inject } from '@angular/core';
+import { Component, OnInit, Injector } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {WizardService} from "../wizard.service";
 import {Income, IncomeService} from "../income.service";

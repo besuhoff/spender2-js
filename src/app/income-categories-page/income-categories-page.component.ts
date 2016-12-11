@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, Inject } from '@angular/core';
+import { Component, OnInit, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import {Subscription} from "rxjs/Subscription";
 import {WizardService} from "../wizard.service";
@@ -7,6 +7,7 @@ import {ChartService} from "../chart.service";
 import {IncomeCategory, IncomeCategoryService} from "../income-category.service";
 import {PaymentMethod, PaymentMethodService} from "../payment-method.service";
 import Timer = NodeJS.Timer;
+import * as moment from 'moment';
 
 @Component({
   selector: 'income-categories-page',
@@ -94,8 +95,7 @@ export class IncomeCategoriesPageComponent implements OnInit {
     private incomeCategoryService: IncomeCategoryService,
     private paymentMethodService: PaymentMethodService,
     private router: Router,
-    private injector: Injector,
-    @Inject('moment') private moment
+    private injector: Injector
   ) {
 
     this.startOfMonth = moment().startOf('month').toDate();
