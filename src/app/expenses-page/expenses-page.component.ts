@@ -1,5 +1,5 @@
 import { Component, OnInit, Injector, Inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import {WizardService} from "../wizard.service";
 import {Expense, ExpenseService} from "../expense.service";
 import * as moment from 'moment';
@@ -28,7 +28,7 @@ export class ExpensesPageComponent implements OnInit {
 
   private _initExpense() {
     this.expense = new Expense({
-      createdAt: (this.expense ? this.moment(this.expense.createdAt).add(1, 'seconds') : this.moment()).format()
+      createdAt: (this.expense ? moment(this.expense.createdAt).add(1, 'seconds') : moment()).format()
     }, this.injector);
   }
 
@@ -48,30 +48,35 @@ export class ExpensesPageComponent implements OnInit {
     private paymentMethodService: PaymentMethodService,
     private router: Router,
     private injector: Injector,
-    @Inject('moment') private moment
-  ) {
-
-    this.startOfMonth = moment().startOf('month').toDate();
-    this._initExpenses();
-    if (!this.expense) {
-      this._initExpense();
-    } else {
-      this.editMode = true;
-    }
-
-    this.expenseServiceListChangedAt = this.expenseService.getListChangedAt().subscribe(() => this._initExpenses());
-    this.paymentMethods = this.paymentMethodService.getAll().filter((item) => !item._isRemoved);
-    this.categories = this.categoryService.getAll().filter((item) => !item._isRemoved);
-  }
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit() {
+    this.route.params
+      .map(params => params['id'])
+      .subscribe((id) => {
+        this.startOfMonth = moment().startOf('month').toDate();
+        this._initExpenses();
+        if (!id) {
+          this._initExpense();
+        } else {
+          this.editMode = true;
+          this.expense = this.expenseService.getOne(+id);
+        }
+
+        this.expenseServiceListChangedAt = this.expenseService.getListChangedAt().subscribe(() => this._initExpenses());
+        this.paymentMethods = this.paymentMethodService.getAll().filter((item) => !item._isRemoved);
+        this.categories = this.categoryService.getAll().filter((item) => !item._isRemoved);
+      });
   }
 
   save() {
     this.loading = true;
 
     if (this.expense.category && this.expense.paymentMethod) {
-      this.expenseService[!this.editMode ? 'add' : 'update'](this.expense.toUpdateData()).subscribe(() => {
+      let update = !this.editMode ? this.expenseService.add(this.expense.toUpdateData()) : this.expenseService.update(this.expense);
+
+      update.subscribe(() => {
         if (this.editMode) {
           this.router.navigate(['/history']);
         } else {

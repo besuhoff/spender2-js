@@ -19,7 +19,7 @@
   </div>
 </div>
 
-<div class="form">
+<div class="form" *ngIf="expense && income">
   <a class="back-link" [hidden]="!editMode" routerLink="/history">&larr; Назад к истории</a>
 
   <div>

@@ -25,11 +25,23 @@ const appRoutes: Routes = [
                 component: ExpensesPageComponent
             },
             {
+                path: 'expenses/:id',
+                component: ExpensesPageComponent
+            },
+            {
                 path: 'income',
                 component: IncomePageComponent
             },
             {
+                path: 'income/:id',
+                component: IncomePageComponent
+            },
+            {
                 path: 'transfers',
+                component: TransfersPageComponent
+            },
+            {
+                path: 'transfers/:id',
                 component: TransfersPageComponent
             },
             {
@@ -46,6 +58,10 @@ const appRoutes: Routes = [
             },
             {
                 path: 'history',
+                component: HistoryPageComponent
+            },
+            {
+                path: 'history/:month',
                 component: HistoryPageComponent
             },
             {

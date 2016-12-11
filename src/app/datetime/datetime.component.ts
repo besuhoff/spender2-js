@@ -2,6 +2,7 @@ import { Component, OnInit, Inject, Input, forwardRef, ViewEncapsulation } from 
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgbInputDatepicker, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
 import { NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap/timepicker/timepicker.module';
+import * as moment from 'moment';
 
 const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
@@ -29,8 +30,8 @@ export class DatetimeComponent implements OnInit, ControlValueAccessor {
     if (v !== this._value) {
       // If date is correct, let's set value
       if (this.date) {
-        let value = this.moment(this.moment(this.date).format('YYYY-MM-DD') + 'T' +
-          this.moment(this.time || new Date(0, 0, 0, 0, 0, 0)).format('HH:mm:ss'), this.moment.ISO_8601);
+        let value = moment(moment(this.date).format('YYYY-MM-DD') + 'T' +
+          moment(this.time || new Date(0, 0, 0, 0, 0, 0)).format('HH:mm:ss'), moment.ISO_8601);
 
         this._value = value.isValid() ? value.format() : null;
       } else if (this._value) {
@@ -61,15 +62,15 @@ export class DatetimeComponent implements OnInit, ControlValueAccessor {
   }
 
   setNow() {
-    this.date = this._momentToDateStruct(this.moment());
-    this.time = this._momentToTimeStruct(this.moment());
-    this.value = this.moment().format();
+    this.date = this._momentToDateStruct(moment());
+    this.time = this._momentToTimeStruct(moment());
+    this.value = moment().format();
   }
 
   writeValue(value: any) {
     let datetime = value;
-    this.time = datetime ? this._momentToTimeStruct(this.moment(datetime)) : null;
-    this.date = datetime ? this._momentToDateStruct(this.moment(datetime)) : null;
+    this.time = datetime ? this._momentToTimeStruct(moment(datetime)) : null;
+    this.date = datetime ? this._momentToDateStruct(moment(datetime)) : null;
 
     this._value = value;
   }
@@ -83,7 +84,7 @@ export class DatetimeComponent implements OnInit, ControlValueAccessor {
   registerOnChange(fn: (_: any) => void): void { this.onChange = fn; }
   registerOnTouched(fn: () => void): void { this.onTouched = fn; }
 
-  constructor(@Inject('moment') private moment) {
+  constructor() {
   }
 
   ngOnInit() {

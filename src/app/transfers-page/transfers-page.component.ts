@@ -1,5 +1,5 @@
 import { Component, OnInit, Injector, Inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import {WizardService} from "../wizard.service";
 import {Expense, ExpenseService} from "../expense.service";
 import * as moment from 'moment';
@@ -24,7 +24,7 @@ export class TransfersPageComponent implements OnInit {
 
   private _initTransfer() {
     this.expense = new Expense({
-      createdAt: (this.expense ? this.moment(this.expense.createdAt).add(1, 'seconds') : this.moment()).format()
+      createdAt: (this.expense ? moment(this.expense.createdAt).add(1, 'seconds') : moment()).format()
     }, this.injector);
 
     this.income = new Income({}, this.injector);
@@ -40,25 +40,31 @@ export class TransfersPageComponent implements OnInit {
     private paymentMethodService: PaymentMethodService,
     private router: Router,
     private injector: Injector,
-    @Inject('moment') private moment
-  ) {
-    this.paymentMethods = this.paymentMethodService.getAll().filter((item) => !item._isRemoved);
-    if (!this.expense && !this.income) {
-      this._initTransfer();
-    } else {
-      this.sourceIncomeCurrencyRate = 1;
-      this.targetIncomeCurrencyRate = this.income.amount / this.expense.amount;
-
-      if (this.targetIncomeCurrencyRate < 1) {
-        this.sourceIncomeCurrencyRate /= this.targetIncomeCurrencyRate;
-        this.targetIncomeCurrencyRate = 1;
-      }
-
-      this.editMode = true;
-    }
-  }
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit() {
+    this.route.params
+      .map(params => params['id'])
+      .subscribe((id) => {
+        this.paymentMethods = this.paymentMethodService.getAll().filter((item) => !item._isRemoved);
+        if (!id) {
+          this._initTransfer();
+        } else {
+          this.expense = this.expenseService.getOne(+id);
+          this.income = this.expense.targetIncome;
+
+          this.sourceIncomeCurrencyRate = 1;
+          this.targetIncomeCurrencyRate = this.income.amount / this.expense.amount;
+
+          if (this.targetIncomeCurrencyRate < 1) {
+            this.sourceIncomeCurrencyRate /= this.targetIncomeCurrencyRate;
+            this.targetIncomeCurrencyRate = 1;
+          }
+
+          this.editMode = true;
+        }
+      });
   }
 
   getTargetAmount(): number {
@@ -80,9 +86,13 @@ export class TransfersPageComponent implements OnInit {
       this.income.comment = this.expense.comment;
       this.income.createdAt = this.expense.createdAt;
 
-      this.incomeService[!this.editMode ? 'add' : 'update'](this.income).subscribe((income) => {
+      let update = !this.editMode ? this.incomeService.add(this.income.toUpdateData()) : this.incomeService.update(this.income);
+
+      update.subscribe((income) => {
         this.expense.targetIncome = income;
-        this.expenseService[!this.editMode ? 'add' : 'update'](this.expense).subscribe(() => {
+
+        let update = !this.editMode ? this.expenseService.add(this.expense.toUpdateData()) : this.expenseService.update(this.expense);
+        update.subscribe(() => {
           if (this.editMode) {
             this.router.navigate(['/history']);
           } else {
@@ -90,7 +100,6 @@ export class TransfersPageComponent implements OnInit {
           }
           this.loading = false;
         });
-
       });
     }
   }

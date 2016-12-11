@@ -1,4 +1,5 @@
 import { Component, Inject } from '@angular/core';
+import * as moment from 'moment';
 
 @Component({
   selector: 'body',
@@ -8,7 +9,7 @@ import { Component, Inject } from '@angular/core';
 export class AppComponent {
   title = 'app works!';
 
-  constructor(@Inject('moment') moment) {
+  constructor() {
     moment.locale('ru');
   }
 }

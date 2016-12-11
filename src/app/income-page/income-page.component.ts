@@ -1,5 +1,5 @@
 import { Component, OnInit, Injector, Inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import {WizardService} from "../wizard.service";
 import {Income, IncomeService} from "../income.service";
 import * as moment from 'moment';
@@ -28,7 +28,7 @@ export class IncomePageComponent implements OnInit {
 
   private _initIncome() {
     this.income = new Income({
-      createdAt: (this.income ? this.moment(this.income.createdAt).add(1, 'seconds') : this.moment()).format()
+      createdAt: (this.income ? moment(this.income.createdAt).add(1, 'seconds') : moment()).format()
     }, this.injector);
   }
 
@@ -48,30 +48,35 @@ export class IncomePageComponent implements OnInit {
     private paymentMethodService: PaymentMethodService,
     private router: Router,
     private injector: Injector,
-    @Inject('moment') private moment
-  ) {
-
-    this.startOfMonth = moment().startOf('month').toDate();
-    this._initIncomes();
-    if (!this.income) {
-      this._initIncome();
-    } else {
-      this.editMode = true;
-    }
-
-    this.incomeServiceListChangedAt = this.incomeService.getListChangedAt().subscribe(() => this._initIncomes());
-    this.paymentMethods = this.paymentMethodService.getAll().filter((item) => !item._isRemoved);
-    this.categories = this.incomeCategoryService.getAll().filter((item) => !item._isRemoved);
-  }
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit() {
+    this.route.params
+      .map(params => params['id'])
+      .subscribe((id) => {
+        this.startOfMonth = moment().startOf('month').toDate();
+        this._initIncomes();
+        if (!id) {
+          this._initIncome();
+        } else {
+          this.editMode = true;
+          this.income = this.incomeService.getOne(+id);
+        }
+
+        this.incomeServiceListChangedAt = this.incomeService.getListChangedAt().subscribe(() => this._initIncomes());
+        this.paymentMethods = this.paymentMethodService.getAll().filter((item) => !item._isRemoved);
+        this.categories = this.incomeCategoryService.getAll().filter((item) => !item._isRemoved);
+      });
   }
 
   save() {
     this.loading = true;
 
     if (this.income.incomeCategory && this.income.paymentMethod) {
-      this.incomeService[!this.editMode ? 'add' : 'update'](this.income.toUpdateData()).subscribe(() => {
+      let update = !this.editMode ? this.incomeService.add(this.income.toUpdateData()) : this.incomeService.update(this.income);
+
+      update.subscribe(() => {
         if (this.editMode) {
           this.router.navigate(['/history']);
         } else {

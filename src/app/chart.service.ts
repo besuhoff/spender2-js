@@ -23,7 +23,7 @@ function hex(hex) {
 @Injectable()
 export class ChartService {
 
-  constructor(@Inject('moment') private moment) { }
+  constructor() { }
 
   protected _buildLineChart(chartMap, paymentMethodsMap, datesMap, datasetConfig) {
     datasetConfig = datasetConfig || {};
@@ -59,11 +59,11 @@ export class ChartService {
       };
 
       let datePoints = Object.keys(datesMap[currency]).sort(),
-          startDateMoment = this.moment(datePoints[0], 'YYYY-MM-DD'),
+          startDateMoment = moment(datePoints[0], 'YYYY-MM-DD'),
           startDateMomentFormatted = startDateMoment.format('YYYY-MM-DD'),
           endDate = datePoints[datePoints.length - 1];
 
-      while(startDateMoment.isBefore(this.moment(endDate, 'YYYY-MM-DD'))) {
+      while(startDateMoment.isBefore(moment(endDate, 'YYYY-MM-DD'))) {
         startDateMoment.add(1, 'days');
         startDateMomentFormatted = startDateMoment.format('YYYY-MM-DD');
 
@@ -74,7 +74,7 @@ export class ChartService {
 
       datePoints = datePoints.sort();
       let labels = datePoints.map((datePoint) => {
-        return this.moment(datePoint, 'YYYY-MM-DD').format('Do MMM');
+        return moment(datePoint, 'YYYY-MM-DD').format('Do MMM');
       });
 
       chart[currency].labels = labels;
@@ -112,7 +112,7 @@ export class ChartService {
   protected _fillInMaps(transactions, chartMap, paymentMethodsMap, datesMap) {
     transactions.forEach((e) => {
       let currency = e.paymentMethod.currency.code,
-          date = this.moment(e.createdAt).format('YYYY-MM-DD');
+          date = moment(e.createdAt).format('YYYY-MM-DD');
 
       if (!chartMap[currency]) {
         chartMap[currency] = {};
@@ -171,7 +171,7 @@ export class ChartService {
         return e;
       })
     ).sort((a, b) => {
-      let diff = +this.moment(a.createdAt) - +this.moment(b.createdAt);
+      let diff = +moment(a.createdAt) - +moment(b.createdAt);
       return diff > 0 ? -1 : diff < 0 ? 1 : 0;
     });
 
@@ -183,7 +183,7 @@ export class ChartService {
 
       // Add date points as initial dates
       let currency = paymentMethod.currency.code,
-        date = this.moment(paymentMethod.createdAt).format('YYYY-MM-DD');
+        date = moment(paymentMethod.createdAt).format('YYYY-MM-DD');
 
       if (!chartMap[currency]) {
         chartMap[currency] = {};
@@ -215,11 +215,11 @@ export class ChartService {
 
     Object.keys(chartMap).forEach((currency) => {
       let datePoints = Object.keys(datesMap[currency]).sort(),
-        startDateMoment = this.moment(datePoints[0], 'YYYY-MM-DD'),
+        startDateMoment = moment(datePoints[0], 'YYYY-MM-DD'),
         startDateMomentFormatted = startDateMoment.format('YYYY-MM-DD'),
         endDate = datePoints[datePoints.length - 1];
 
-      while(startDateMoment.isBefore(this.moment(endDate, 'YYYY-MM-DD'))) {
+      while(startDateMoment.isBefore(moment(endDate, 'YYYY-MM-DD'))) {
         startDateMoment.add(1, 'days');
         startDateMomentFormatted = startDateMoment.format('YYYY-MM-DD');
 
