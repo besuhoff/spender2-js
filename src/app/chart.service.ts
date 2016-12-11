@@ -1,5 +1,8 @@
 import { Injectable, Inject } from '@angular/core';
 import * as moment from 'moment';
+import {Expense} from "./expense.service";
+import {Income} from "./income.service";
+import {PaymentMethod} from "./payment-method.service";
 
 function hex(hex) {
   if (/^#/.test(hex)) {
@@ -157,23 +160,23 @@ export class ChartService {
     return this._buildLineChart(chartMap, paymentMethodsMap, datesMap, { borderWidth: 0, backgroundOpacity: 1  });
   };
 
-  buildBalanceChart(expenses, incomes, paymentMethods) {
+  buildBalanceChart(expenses: Expense[], incomes: Income[], paymentMethods: PaymentMethod[]) {
     let chartMap = {},
       paymentMethodsMap = {},
       datesMap = {},
       totalsMap = {};
 
     // Get all transactions sorted by reverse date order to do a retrospective analysis
-    let transactions = incomes.concat(
-      expenses.map((expense) => {
-        let e = Object.create({}, expense);
+    let transactions = incomes
+      .map(income => income.toUpdateData())
+      .concat(expenses.map((expense) => {
+        let e = expense.toUpdateData();
         e.amount *= -1;
         return e;
-      })
-    ).sort((a, b) => {
-      let diff = +moment(a.createdAt) - +moment(b.createdAt);
-      return diff > 0 ? -1 : diff < 0 ? 1 : 0;
-    });
+      })).sort((a, b) => {
+        let diff = +moment(a.createdAt) - +moment(b.createdAt);
+        return diff > 0 ? -1 : diff < 0 ? 1 : 0;
+      });
 
     this._fillInMaps(transactions, chartMap, paymentMethodsMap, datesMap);
 
@@ -182,7 +185,7 @@ export class ChartService {
       totalsMap[paymentMethod.id] = paymentMethod.initialAmount + paymentMethod.incomes - paymentMethod.expenses;
 
       // Add date points as initial dates
-      let currency = paymentMethod.currency.code,
+      let currency = paymentMethod.currency.code; /*,
         date = moment(paymentMethod.createdAt).format('YYYY-MM-DD');
 
       if (!chartMap[currency]) {
@@ -191,26 +194,27 @@ export class ChartService {
 
       if (!datesMap[currency]) {
         datesMap[currency] = {};
-      }
+      }*/
 
       if (!paymentMethodsMap[currency]) {
         paymentMethodsMap[currency] = {};
       }
-
+/*
       if (!chartMap[currency][paymentMethod.id]) {
         chartMap[currency][paymentMethod.id] = {};
       }
 
       if (chartMap[currency][paymentMethod.id][date] === undefined) {
         chartMap[currency][paymentMethod.id][date] = 0;
-      }
+      }*/
 
       paymentMethodsMap[currency][paymentMethod.id] = {
         name: paymentMethod.name,
         color: paymentMethod.color
       };
+      /*
       datesMap[currency][date] = date;
-      chartMap[currency][paymentMethod.id][date] += paymentMethod.initialAmount;
+      chartMap[currency][paymentMethod.id][date] += paymentMethod.initialAmount;*/
     });
 
     Object.keys(chartMap).forEach((currency) => {
