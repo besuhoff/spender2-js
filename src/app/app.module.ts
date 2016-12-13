@@ -50,6 +50,7 @@ import {LoaderService} from "./loader.service";
 import { routing, appRoutingProviders } from './app.routing';
 import { LoginFormComponent } from './login-form/login-form.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
