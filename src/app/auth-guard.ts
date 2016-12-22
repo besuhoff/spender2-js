@@ -5,9 +5,12 @@ import { GapiService } from './gapi.service';
 import 'rxjs/add/operator/toPromise';
 import { HttpClientService } from "./http-client.service";
 import {CacheService} from "./cache.service";
+import {Subscription} from "rxjs/Subscription";
 
 @Injectable()
 export class AuthGuard implements CanActivate, CanActivateChild {
+  private cacheServiceIsLoaded: Subscription;
+
   constructor(
     private cacheService: CacheService,
     private authService: AuthService,
@@ -42,8 +45,9 @@ export class AuthGuard implements CanActivate, CanActivateChild {
         return resolve(true);
       }
 
-      this.cacheService.isLoaded().subscribe((isLoaded) => {
+      this.cacheServiceIsLoaded = this.cacheService.isLoaded().subscribe((isLoaded) => {
         if (isLoaded) {
+          this.cacheServiceIsLoaded.unsubscribe();
           return resolve(true);
         }
       });
