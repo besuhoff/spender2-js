@@ -8,6 +8,7 @@ import {IncomeCategory, IncomeCategoryService} from "../income-category.service"
 import {PaymentMethod, PaymentMethodService} from "../payment-method.service";
 import Timer = NodeJS.Timer;
 import * as moment from 'moment';
+import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'income-categories-page',
@@ -17,7 +18,7 @@ import * as moment from 'moment';
 export class IncomeCategoriesPageComponent implements OnInit {
 
   private loading = false;
-  private isLoaded = {};
+  private isLoaded: { [propName: string]: Observable<IncomeCategory> } = {};
   private category: IncomeCategory;
   private income: Income[] = [];
   private lastMonthIncome: Income[] = [];
@@ -26,7 +27,7 @@ export class IncomeCategoriesPageComponent implements OnInit {
   private startOfMonth: Date;
   private categoriesChart = [];
   private incomeServiceListChangedAt: Subscription;
-  private isNewLoaded: Promise<IncomeCategory>;
+  private isNewLoaded: Observable<IncomeCategory>;
   private selectedColors: string[];
   private _debounceTimeout: Timer;
 
@@ -52,7 +53,8 @@ export class IncomeCategoriesPageComponent implements OnInit {
       }
 
       this._debounceTimeout = setTimeout(() => {
-        this.isLoaded[category.id] = this.incomeCategoryService.update(category).toPromise().then(() => {
+        this.isLoaded[category.id] = this.incomeCategoryService.update(category);
+        this.isLoaded[category.id].subscribe(() => {
           this._initCategories();
         });
       }, 300);
@@ -61,7 +63,8 @@ export class IncomeCategoriesPageComponent implements OnInit {
 
   public addCategory() {
     if (this.category.name) {
-      this.isNewLoaded = this.incomeCategoryService.add(this.category).toPromise().then(() => {
+      this.isNewLoaded = this.incomeCategoryService.add(this.category);
+      this.isNewLoaded.subscribe(() => {
         this._initCategories();
         this._initCategory();
       });
@@ -71,9 +74,12 @@ export class IncomeCategoriesPageComponent implements OnInit {
   };
 
   public deleteCategory(category) {
-    this.isLoaded[category.id] = this.incomeCategoryService.delete(category).toPromise().then(() => {
+    this.isLoaded[category.id] = this.incomeCategoryService.delete(category);
+    this.isLoaded[category.id].subscribe(() => {
       this._initCategories();
     });
+
+    return this.isLoaded[category.id];
   }
 
   public updateSelectedColors() {

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/operator/map';
 import 'rxjs/add/operator/share';
+import 'rxjs/add/operator/cache';
 import { HttpClientService } from "./http-client.service";
 
 export abstract class DataEntity {
@@ -67,7 +68,7 @@ export abstract class DataService<T extends DataEntity> {
           this._entities = response.json().map(data => new (this._getEntityClass())(data, this.injector));
 
           return this._entities;
-        });
+        }).cache();
     }
 
     return this._entitiesDeferred;
@@ -83,7 +84,7 @@ export abstract class DataService<T extends DataEntity> {
         }
 
         return entity;
-      });
+      }).cache();
   };
 
   update(entity: T, suppressListChange: boolean = false): Observable<T> {
@@ -93,7 +94,7 @@ export abstract class DataService<T extends DataEntity> {
       }
 
       return entity;
-    });
+    }).cache();
   };
 
   delete(entity, suppressListChange: boolean = false): Observable<T> {
@@ -104,6 +105,6 @@ export abstract class DataService<T extends DataEntity> {
       }
 
       return entity;
-    });
+    }).cache();
   };
 }
