@@ -105,7 +105,7 @@ export class WizardService {
 
   nextStep() {
     return this.userService.update({ wizardStep: this.step() + 1 }).map((data) => {
-      this.modalRef.close();
+      this.modalRef && this.modalRef.close();
       this.goToCurrentHint();
       return data;
     });
@@ -118,7 +118,7 @@ export class WizardService {
 
   close() {
     return this.userService.update({ wizardStep: -1 }).map((data) => {
-      this.modalRef.close();
+      this.modalRef && this.modalRef.close();
       this._isHelpHintShown = true;
 
       setTimeout(() => {

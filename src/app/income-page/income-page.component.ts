@@ -15,6 +15,10 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class IncomePageComponent implements OnInit {
 
+  private isWizardLoading: boolean = false;
+  private isWizardNextStepLoading: boolean = false;
+  private isWizardCloseLoading: boolean = false;
+
   private loading: boolean = false;
   private income: Income;
   private editMode: boolean;
@@ -120,19 +124,21 @@ export class IncomePageComponent implements OnInit {
   }
 
   isHintVisible(): boolean {
-    return this.wizardService.isExpenseHintVisible();
+    return this.wizardService.isIncomeHintVisible();
   }
 
   nextStep() {
-    this.loading = true;
+    this.isWizardLoading = true;
+    this.isWizardNextStepLoading = true;
 
-    return this.wizardService.nextStep().subscribe(() => this.loading = false);
+    return this.wizardService.nextStep().subscribe(() => { this.isWizardLoading = false; this.isWizardNextStepLoading = false });
   }
 
   close() {
-    this.loading = true;
+    this.isWizardLoading = true;
+    this.isWizardCloseLoading = true;
 
-    return this.wizardService.close().subscribe(() => this.loading = false);
+    return this.wizardService.close().subscribe(() => { this.isWizardLoading = false; this.isWizardCloseLoading = false; });
   }
 
   ngOnDestroy() {

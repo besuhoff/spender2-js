@@ -15,6 +15,10 @@ import {Subscription} from 'rxjs/Subscription';
 })
 export class ExpensesPageComponent implements OnInit {
 
+  private isWizardLoading: boolean = false;
+  private isWizardNextStepLoading: boolean = false;
+  private isWizardCloseLoading: boolean = false;
+
   private loading: boolean = false;
   private expense: Expense;
   private editMode: boolean;
@@ -124,15 +128,17 @@ export class ExpensesPageComponent implements OnInit {
   }
 
   nextStep() {
-    this.loading = true;
+    this.isWizardLoading = true;
+    this.isWizardNextStepLoading = true;
 
-    return this.wizardService.nextStep().subscribe(() => this.loading = false);
+    return this.wizardService.nextStep().subscribe(() => { this.isWizardLoading = false; this.isWizardNextStepLoading = false });
   }
 
   close() {
-    this.loading = true;
+    this.isWizardLoading = true;
+    this.isWizardCloseLoading = true;
 
-    return this.wizardService.close().subscribe(() => this.loading = false);
+    return this.wizardService.close().subscribe(() => { this.isWizardLoading = false; this.isWizardCloseLoading = false; });
   }
 
   ngOnDestroy() {

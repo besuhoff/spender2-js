@@ -1,3 +1,17 @@
-<p>
-  loader works!
-</p>
+<div class="loader container">
+  <h2 class="text-center">Загружаем данные</h2>
+  <div class="col-md-4 col-md-offset-4">
+    <div class="loader__items">
+      <div class="loader__item" [class.loader__item--active]="itemsLoaded[item]" *ngFor="let item of itemsToLoad">
+            <span [ngSwitch]="item">
+              <span *ngSwitchCase="'expenses'">Траты</span>
+              <span *ngSwitchCase="'categories'">Категории трат</span>
+              <span *ngSwitchCase="'incomes'">Доходы</span>
+              <span *ngSwitchCase="'incomeCategories'">Категории доходов</span>
+              <span *ngSwitchCase="'paymentMethods'">Платежные средства</span>
+              <span *ngSwitchCase="'currencies'">Валюты</span>
+            </span>
+      </div>
+    </div>
+  </div>
+</div>

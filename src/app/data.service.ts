@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/operator/map';
 import 'rxjs/add/operator/share';
+import 'rxjs/add/operator/cache';
 import { HttpClientService } from "./http-client.service";
 
 export abstract class DataEntity {
@@ -28,7 +29,7 @@ export abstract class DataService<T extends DataEntity> {
 
   protected abstract _getEntityClass();
 
-  protected _getEntityUrl(id: number = undefined): string {
+  protected _getEntityUrl(id: number = null): string {
     return this._http.getUrl(this._getPluralKey(), id);
   }
 
@@ -55,19 +56,20 @@ export abstract class DataService<T extends DataEntity> {
     this._listChangedAt.next(+new Date());
   };
 
-  resetAll(): void {
+  resetAll(): this {
     this._entities = [];
-    this._entitiesDeferred = undefined;
+    this._entitiesDeferred = null;
+    return this;
   };
 
-  loadAll(reload: boolean = false): Observable<T[]> {
-    if (!this._entitiesDeferred || reload) {
+  loadAll(): Observable<T[]> {
+    if (!this._entitiesDeferred) {
       this._entitiesDeferred = this._http.get(this._getEntityUrl())
         .map<T[]>((response: Response) => {
           this._entities = response.json().map(data => new (this._getEntityClass())(data, this.injector));
 
           return this._entities;
-        });
+        }).cache();
     }
 
     return this._entitiesDeferred;
@@ -83,7 +85,7 @@ export abstract class DataService<T extends DataEntity> {
         }
 
         return entity;
-      });
+      }).cache();
   };
 
   update(entity: T, suppressListChange: boolean = false): Observable<T> {
@@ -93,7 +95,7 @@ export abstract class DataService<T extends DataEntity> {
       }
 
       return entity;
-    });
+    }).cache();
   };
 
   delete(entity, suppressListChange: boolean = false): Observable<T> {
@@ -104,6 +106,6 @@ export abstract class DataService<T extends DataEntity> {
       }
 
       return entity;
-    });
+    }).cache();
   };
 }

@@ -12,7 +12,7 @@
     </div>
 
     <div class="button-holder m-b-n-sm">
-      <span class="m-l-xs"><button class="btn m-b-sm btn-primary" (click)="close()" [disabled]="loading">Я освоился, спасибо!</button></span>
+      <span class="m-l-xs"><button class="btn m-b-sm btn-primary" (click)="close()" [disabled]="isWizardLoading" [ladda]="isWizardCloseLoading">Я освоился, спасибо!</button></span>
     </div>
   </div>
 </div>

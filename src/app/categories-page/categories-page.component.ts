@@ -8,6 +8,7 @@ import {Category, CategoryService} from "../category.service";
 import {PaymentMethod, PaymentMethodService} from "../payment-method.service";
 import Timer = NodeJS.Timer;
 import * as moment from 'moment';
+import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'categories-page',
@@ -16,8 +17,11 @@ import * as moment from 'moment';
 })
 export class CategoriesPageComponent implements OnInit {
 
-  private loading = false;
-  private isLoaded = {};
+  private isWizardLoading: boolean = false;
+  private isWizardNextStepLoading: boolean = false;
+  private isWizardCloseLoading: boolean = false;
+
+  private isLoaded: { [propName: string]: Observable<Category> } = {};
   private category: Category;
   private expenses: Expense[] = [];
   private lastMonthExpenses: Expense[] = [];
@@ -26,11 +30,10 @@ export class CategoriesPageComponent implements OnInit {
   private startOfMonth: Date;
   private categoriesChart = [];
   private expenseServiceListChangedAt: Subscription;
-  private isNewLoaded: Promise<Category>;
+  private isNewLoaded: Observable<Category>;
   private selectedColors: string[];
   private _debounceTimeout: Timer;
 
-  
   private _initCategories() {
     this.expenses = this.expenseService.getAll().filter(function(item) { return !item._isRemoved; });
     this.lastMonthExpenses = this.expenses.filter((item) => +item.createdAt >= +this.startOfMonth);
@@ -53,7 +56,8 @@ export class CategoriesPageComponent implements OnInit {
       }
 
       this._debounceTimeout = setTimeout(() => {
-        this.isLoaded[category.id] = this.categoryService.update(category).toPromise().then(() => {
+        this.isLoaded[category.id] = this.categoryService.update(category);
+        this.isLoaded[category.id].subscribe(() => {
           this._initCategories();
         });
       }, 300);
@@ -62,7 +66,8 @@ export class CategoriesPageComponent implements OnInit {
 
   public addCategory() {
     if (this.category.name) {
-      this.isNewLoaded = this.categoryService.add(this.category).toPromise().then(() => {
+      this.isNewLoaded = this.categoryService.add(this.category);
+      this.isNewLoaded.subscribe(() => {
         this._initCategories();
         this._initCategory();
       });
@@ -72,9 +77,12 @@ export class CategoriesPageComponent implements OnInit {
   };
 
   public deleteCategory(category) {
-    this.isLoaded[category.id] = this.categoryService.delete(category).toPromise().then(() => {
+    this.isLoaded[category.id] = this.categoryService.delete(category);
+    this.isLoaded[category.id].subscribe(() => {
       this._initCategories();
     });
+
+    return this.isLoaded[category.id];
   }
 
   public updateSelectedColors() {
@@ -116,19 +124,21 @@ export class CategoriesPageComponent implements OnInit {
   }
 
   isHintVisible(): boolean {
-    return this.wizardService.isExpenseHintVisible();
+    return this.wizardService.isCategoryHintVisible();
   }
 
   nextStep() {
-    this.loading = true;
+    this.isWizardLoading = true;
+    this.isWizardNextStepLoading = true;
 
-    return this.wizardService.nextStep().subscribe(() => this.loading = false);
+    return this.wizardService.nextStep().subscribe(() => { this.isWizardLoading = false; this.isWizardNextStepLoading = false });
   }
 
   close() {
-    this.loading = true;
+    this.isWizardLoading = true;
+    this.isWizardCloseLoading = true;
 
-    return this.wizardService.close().subscribe(() => this.loading = false);
+    return this.wizardService.close().subscribe(() => { this.isWizardLoading = false; this.isWizardCloseLoading = false; });
   }
 
   ngOnDestroy() {

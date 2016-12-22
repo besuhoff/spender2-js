@@ -30,7 +30,13 @@ export class DatetimeComponent implements OnInit, ControlValueAccessor {
     if (v !== this._value) {
       // If date is correct, let's set value
       if (this.date) {
-        let value = moment(moment(this.date).format('YYYY-MM-DD') + 'T' +
+        let date = {
+          day: this.date.day,
+          month: this.date.month - 1,
+          year: this.date.year
+        };
+
+        let value = moment(moment(date).format('YYYY-MM-DD') + 'T' +
           moment(this.time || new Date(0, 0, 0, 0, 0, 0)).format('HH:mm:ss'), moment.ISO_8601);
 
         this._value = value.isValid() ? value.format() : null;
@@ -47,7 +53,7 @@ export class DatetimeComponent implements OnInit, ControlValueAccessor {
     let momentObject = moment.toObject();
     return {
       day: momentObject.date,
-      month: momentObject.months,
+      month: momentObject.months + 1,
       year: momentObject.years
     };
   }

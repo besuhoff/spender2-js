@@ -3,6 +3,7 @@ import {WizardService} from "../wizard.service";
 import {PaymentMethod, PaymentMethodService} from "../payment-method.service";
 import {Currency, CurrencyService} from "../currency.service";
 import Timer = NodeJS.Timer;
+import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'payment-methods-page',
@@ -11,13 +12,16 @@ import Timer = NodeJS.Timer;
 })
 export class PaymentMethodsPageComponent implements OnInit {
 
+  private isWizardLoading: boolean = false;
+  private isWizardNextStepLoading: boolean = false;
+  private isWizardCloseLoading: boolean = false;
+
   private paymentMethod: PaymentMethod;
   private paymentMethods: PaymentMethod[];
   private currencies: Currency[];
-  private isNewLoaded: Promise<PaymentMethod>;
-  private isLoaded: {};
+  private isNewLoaded: Observable<PaymentMethod>;
+  private isLoaded: { [propName: string]: Observable<PaymentMethod> } = {};
   private selectedColors: string[];
-  private loading: boolean = false;
   private _debounceTimeout: Timer;
 
   private _initMethods() {
@@ -56,7 +60,8 @@ export class PaymentMethodsPageComponent implements OnInit {
       }
 
       this._debounceTimeout = setTimeout(() => {
-        this.isLoaded[paymentMethod.id] = this.paymentMethodService.update(paymentMethod).toPromise().then(() => {
+        this.isLoaded[paymentMethod.id] = this.paymentMethodService.update(paymentMethod);
+        this.isLoaded[paymentMethod.id].subscribe(() => {
           this._initMethods();
         });
       }, 300);
@@ -65,7 +70,8 @@ export class PaymentMethodsPageComponent implements OnInit {
 
   addMethod() {
     if (this.paymentMethod.name && this.paymentMethod.currency) {
-      this.isNewLoaded = this.paymentMethodService.add(this.paymentMethod).toPromise().then((paymentMethod) => {
+      this.isNewLoaded = this.paymentMethodService.add(this.paymentMethod);
+      this.isNewLoaded.subscribe((paymentMethod) => {
         this._initMethods();
         return this._initMethod();
       });
@@ -75,7 +81,8 @@ export class PaymentMethodsPageComponent implements OnInit {
   }
 
   deleteMethod(paymentMethod) {
-    this.isLoaded[paymentMethod.id] = this.paymentMethodService.delete(paymentMethod).toPromise().then(() => {
+    this.isLoaded[paymentMethod.id] = this.paymentMethodService.delete(paymentMethod);
+    this.isLoaded[paymentMethod.id].subscribe((paymentMethod) => {
       this._initMethods();
     });
 
@@ -90,18 +97,20 @@ export class PaymentMethodsPageComponent implements OnInit {
   }
 
   isHintVisible(): boolean {
-    return this.wizardService.isTransferHintVisible();
+    return this.wizardService.isPaymentMethodHintVisible();
   }
 
   nextStep() {
-    this.loading = true;
+    this.isWizardLoading = true;
+    this.isWizardNextStepLoading = true;
 
-    return this.wizardService.nextStep().subscribe(() => this.loading = false);
+    return this.wizardService.nextStep().subscribe(() => { this.isWizardLoading = false; this.isWizardNextStepLoading = false });
   }
 
   close() {
-    this.loading = true;
+    this.isWizardLoading = true;
+    this.isWizardCloseLoading = true;
 
-    return this.wizardService.close().subscribe(() => this.loading = false);
+    return this.wizardService.close().subscribe(() => { this.isWizardLoading = false; this.isWizardCloseLoading = false; });
   }
 }

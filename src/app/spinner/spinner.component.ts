@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'spinner',
@@ -7,7 +8,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/cor
 })
 export class SpinnerComponent implements OnInit, OnChanges {
 
-  @Input() private isLoaded: Promise<any>;
+  @Input() private isLoaded: Observable<any>;
   private isPending: boolean = false;
   private isSaved: boolean = false;
 
@@ -19,18 +20,22 @@ export class SpinnerComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     let isLoaded = changes['isLoaded'].currentValue;
 
-    if (isLoaded && isLoaded instanceof Promise) {
+    if (isLoaded && isLoaded instanceof Observable) {
       this.isPending = true;
       isLoaded
-        .then(() => {
-          setTimeout(() => {
+        .subscribe(
+          () => {
+            setTimeout(() => {
+              this.isPending = false;
+              this.isSaved = true;
+              setTimeout(() => this.isSaved = false, 500);
+            }, 500);
+          },
+
+          () => {
             this.isPending = false;
-            this.isSaved = true;
-            setTimeout(() => this.isSaved = false, 500);
-          }, 500);
-        }).catch(() => {
-          this.isPending = false;
-        });
+          }
+        );
     }
 
   }

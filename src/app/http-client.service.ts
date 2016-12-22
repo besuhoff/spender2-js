@@ -13,9 +13,9 @@ export class HttpClientService extends Http {
     super(backend, options);
   }
 
-  public getUrl(entityKey: string, id: number = undefined): string {
+  public getUrl(entityKey: string, id: number = null): string {
     let url = HttpClientService._baseUrl + '/' + entityKey;
-    if (id !== undefined) {
+    if (id !== null) {
       url += '/' + id;
     }
 

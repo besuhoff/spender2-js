@@ -41,8 +41,10 @@ interface MonthStruct {
 })
 export class HistoryPageComponent implements OnInit {
 
+  private isWizardLoading: boolean = false;
+  private isWizardCloseLoading: boolean = false;
+
   private history: HistoryItem[];
-  private loading: boolean = false;
   private months: MonthStruct[];
   private currentMonth: string;
   private monthsMap: {};
@@ -123,7 +125,7 @@ export class HistoryPageComponent implements OnInit {
 
     this.months = Object.keys(this.monthsMap).sort().reverse().map((monthId) => ({ id: monthId, name: this.monthsMap[monthId] }));
 
-    this.currentMonth = this.currentMonth || this.months[0].id;
+    this.currentMonth = this.currentMonth || (this.months[0] && this.months[0].id);
 
     this.history = history
       .filter((item) => item.createdAtMonthId === this.currentMonth)
@@ -176,9 +178,10 @@ export class HistoryPageComponent implements OnInit {
   }
 
   close() {
-    this.loading = true;
+    this.isWizardLoading = true;
+    this.isWizardCloseLoading = true;
 
-    return this.wizardService.close().subscribe(() => this.loading = false);
+    return this.wizardService.close().subscribe(() => { this.isWizardLoading = false; this.isWizardCloseLoading = false; });
   }
 
   gotoMonth(month) {

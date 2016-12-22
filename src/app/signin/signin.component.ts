@@ -32,11 +32,11 @@ export class SigninComponent implements OnInit {
           zone.run(() => {
             component.isLoading = true;
 
-            authService.setProfile(profile).subscribe(() => {
-              component.signedIn.emit();
-            });
+            component.signedIn.emit();
 
-            loginService.hideForm();
+            if (loginService.hasForm()) {
+              loginService.hideForm();
+            }
           });
         },
 

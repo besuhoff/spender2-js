@@ -19,6 +19,7 @@ const appRoutes: Routes = [
         path: '',
         component: LayoutComponent,
         canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
         children: [
             {
                 path: 'expenses',
