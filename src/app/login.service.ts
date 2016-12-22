@@ -11,13 +11,18 @@ export class LoginService {
 
   }
 
-  showForm() {
+  hasForm(): boolean {
+    return !!this.modalRef;
+  }
+
+  showForm(): void {
     this.modalRef = this.ngbModal.open(LoginFormComponent, {
       windowClass: 'modal--wizard'
     });
   };
 
-  hideForm() {
+  hideForm(): void {
     this.modalRef.close();
+    this.modalRef = null;
   };
 }

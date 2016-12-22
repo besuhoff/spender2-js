@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, CanActivateChild, Router } from '@angular/router';
 import { AuthService } from './auth.service';
 import { GapiService } from './gapi.service';
 import 'rxjs/add/operator/toPromise';
 import { HttpClientService } from "./http-client.service";
+import {CacheService} from "./cache.service";
 
 @Injectable()
-export class AuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate, CanActivateChild {
   constructor(
+    private cacheService: CacheService,
     private authService: AuthService,
     private gapiService: GapiService,
     private router:Router,
@@ -32,5 +34,15 @@ export class AuthGuard implements CanActivate {
           return Promise.resolve(true);
         }
       );
+  }
+
+  canActivateChild(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      this.cacheService.isLoaded().subscribe((isLoaded) => {
+        if (isLoaded) {
+          resolve(true);
+        }
+      });
+    });
   }
 }

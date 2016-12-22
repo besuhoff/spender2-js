@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/map';
 import { Profile } from './gapi.service';
 import { UserService } from './user.service';
@@ -21,10 +20,8 @@ export class AuthService {
 
   setProfile(profile: Profile): Observable<Profile> {
     return this.userService.create()
-      .mergeMap(() => {
-        return this.cacheService.loadAll(true);
-      })
       .map(() => {
+        this.cacheService.loadAll(true).subscribe();
         this._profile = profile;
         return profile;
       });
