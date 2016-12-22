@@ -11,12 +11,16 @@ import { PaymentMethod, PaymentMethodService } from './payment-method.service';
 import { Currency, CurrencyService } from './currency.service';
 import {Subject} from "rxjs/Subject";
 import {DataEntity} from "./data.service";
+import {Subscription} from "rxjs/Subscription";
 
 @Injectable()
 export class CacheService {
 
   private _isLoaded: Subject<boolean> = new Subject();
   private _hasData: boolean = false;
+
+  private incomeServiceListChangedAt: Subscription;
+  private expenseServiceListChangedAt: Subscription;
 
   private isPartLoaded: {
     incomeCategories: Subject<boolean>,
@@ -97,6 +101,9 @@ export class CacheService {
     for (let part in this.isPartLoaded) {
       this.isPartLoaded[part].next(false);
     }
+
+    this.incomeServiceListChangedAt.unsubscribe();
+    this.expenseServiceListChangedAt.unsubscribe();
   }
 
   hasData(): boolean {
@@ -104,19 +111,23 @@ export class CacheService {
   }
 
   loadAll(): Observable<DataEntity[][]> {
+    if (!this.hasData()) {
+      this._isLoaded.next(false);
+    }
+
     return Observable.forkJoin([
       this.incomeCategoryService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.incomeCategories.next(true); } return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.incomeCategories.next(true); }; return data }),
       this.categoryService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.categories.next(true); } return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.categories.next(true); }; return data }),
       this.expenseService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.expenses.next(true); } return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.expenses.next(true); }; return data }),
       this.incomeService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.incomes.next(true); } return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.incomes.next(true); }; return data }),
       this.currencyService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.currencies.next(true); } return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.currencies.next(true); }; return data }),
       this.paymentMethodService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.paymentMethods.next(true); } return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.paymentMethods.next(true); }; return data }),
     ]).map(results => {
       if (!this.hasData()) {
 
@@ -140,7 +151,7 @@ export class CacheService {
   }
 
   initPaymentMethodDependencies(): void {
-    this.incomeService.getListChangedAt().subscribe(() => this.refreshPaymentMethods());
-    this.expenseService.getListChangedAt().subscribe(() => this.refreshPaymentMethods());
+    this.incomeServiceListChangedAt = this.incomeService.getListChangedAt().subscribe(() => this.refreshPaymentMethods());
+    this.expenseServiceListChangedAt = this.expenseService.getListChangedAt().subscribe(() => this.refreshPaymentMethods());
   };
 }
