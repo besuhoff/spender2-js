@@ -12,13 +12,16 @@ import {Observable} from "rxjs/Observable";
 })
 export class PaymentMethodsPageComponent implements OnInit {
 
+  private isWizardLoading: boolean = false;
+  private isWizardNextStepLoading: boolean = false;
+  private isWizardCloseLoading: boolean = false;
+
   private paymentMethod: PaymentMethod;
   private paymentMethods: PaymentMethod[];
   private currencies: Currency[];
   private isNewLoaded: Observable<PaymentMethod>;
   private isLoaded: { [propName: string]: Observable<PaymentMethod> } = {};
   private selectedColors: string[];
-  private loading: boolean = false;
   private _debounceTimeout: Timer;
 
   private _initMethods() {
@@ -94,18 +97,20 @@ export class PaymentMethodsPageComponent implements OnInit {
   }
 
   isHintVisible(): boolean {
-    return this.wizardService.isTransferHintVisible();
+    return this.wizardService.isPaymentMethodHintVisible();
   }
 
   nextStep() {
-    this.loading = true;
+    this.isWizardLoading = true;
+    this.isWizardNextStepLoading = true;
 
-    return this.wizardService.nextStep().subscribe(() => this.loading = false);
+    return this.wizardService.nextStep().subscribe(() => { this.isWizardLoading = false; this.isWizardNextStepLoading = false });
   }
 
   close() {
-    this.loading = true;
+    this.isWizardLoading = true;
+    this.isWizardCloseLoading = true;
 
-    return this.wizardService.close().subscribe(() => this.loading = false);
+    return this.wizardService.close().subscribe(() => { this.isWizardLoading = false; this.isWizardCloseLoading = false; });
   }
 }

@@ -38,9 +38,13 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
   canActivateChild(): Promise<boolean> {
     return new Promise((resolve, reject) => {
+      if (this.cacheService.hasData()) {
+        return resolve(true);
+      }
+
       this.cacheService.isLoaded().subscribe((isLoaded) => {
         if (isLoaded) {
-          resolve(true);
+          return resolve(true);
         }
       });
     });

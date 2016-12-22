@@ -21,7 +21,7 @@ export class AuthService {
   setProfile(profile: Profile): Observable<Profile> {
     return this.userService.create()
       .map(() => {
-        this.cacheService.loadAll(true).subscribe();
+        this.cacheService.loadAll().subscribe();
         this._profile = profile;
         return profile;
       });
@@ -29,5 +29,6 @@ export class AuthService {
 
   reset(): void {
     this._profile = undefined;
+    this.cacheService.resetAll();
   }
 }

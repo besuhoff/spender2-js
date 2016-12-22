@@ -17,7 +17,10 @@ import {Observable} from "rxjs/Observable";
 })
 export class IncomeCategoriesPageComponent implements OnInit {
 
-  private loading = false;
+  private isWizardLoading: boolean = false;
+  private isWizardNextStepLoading: boolean = false;
+  private isWizardCloseLoading: boolean = false;
+
   private isLoaded: { [propName: string]: Observable<IncomeCategory> } = {};
   private category: IncomeCategory;
   private income: Income[] = [];
@@ -121,19 +124,21 @@ export class IncomeCategoriesPageComponent implements OnInit {
   }
 
   isHintVisible(): boolean {
-    return this.wizardService.isExpenseHintVisible();
+    return this.wizardService.isIncomeCategoryHintVisible();
   }
 
   nextStep() {
-    this.loading = true;
+    this.isWizardLoading = true;
+    this.isWizardNextStepLoading = true;
 
-    return this.wizardService.nextStep().subscribe(() => this.loading = false);
+    return this.wizardService.nextStep().subscribe(() => { this.isWizardLoading = false; this.isWizardNextStepLoading = false });
   }
 
   close() {
-    this.loading = true;
+    this.isWizardLoading = true;
+    this.isWizardCloseLoading = true;
 
-    return this.wizardService.close().subscribe(() => this.loading = false);
+    return this.wizardService.close().subscribe(() => { this.isWizardLoading = false; this.isWizardCloseLoading = false; });
   }
 
   ngOnDestroy() {
