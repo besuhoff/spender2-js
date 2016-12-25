@@ -117,17 +117,17 @@ export class CacheService {
 
     return Observable.forkJoin([
       this.incomeCategoryService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.incomeCategories.next(true); }; return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.incomeCategories.next(true); } return data }),
       this.categoryService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.categories.next(true); }; return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.categories.next(true); } return data }),
       this.expenseService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.expenses.next(true); }; return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.expenses.next(true); } return data }),
       this.incomeService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.incomes.next(true); }; return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.incomes.next(true); } return data }),
       this.currencyService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.currencies.next(true); }; return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.currencies.next(true); } return data }),
       this.paymentMethodService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.paymentMethods.next(true); }; return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.paymentMethods.next(true); } return data }),
     ]).map(results => {
       if (!this.hasData()) {
 
