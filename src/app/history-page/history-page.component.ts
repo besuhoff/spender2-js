@@ -64,7 +64,7 @@ export class HistoryPageComponent implements OnInit {
           createdAt: createdAt,
           income: income,
           type: 'income',
-          routeName: 'incomes',
+          routeName: 'income',
           category: income.incomeCategory,
           createdAtDate: createdAt.format('DD/MM, dddd'),
           createdAtMonthId: createdAt.format('YYYY-MM'),
