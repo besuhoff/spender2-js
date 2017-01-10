@@ -77,6 +77,7 @@ export class HistoryPageComponent implements OnInit {
         };
 
         if (income.sourceExpense) {
+          entity.id = income.sourceExpense.id;
           entity.type = 'transfer';
           entity.routeName = 'transfers';
           entity.expense = income.sourceExpense;
