@@ -98,7 +98,7 @@ export abstract class DataService<T extends DataEntity> {
     }).cache();
   };
 
-  delete(entity, suppressListChange: boolean = false): Observable<T> {
+  delete(entity: T, suppressListChange: boolean = false): Observable<T> {
     return this._http.delete(this._getEntityUrl(entity.id)).map<T>(() => {
       this._entities.splice(this._entities.indexOf(entity), 1);
       if (!suppressListChange) {

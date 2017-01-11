@@ -10,6 +10,7 @@ import {PaymentMethod} from "../payment-method.service";
 import {Observable} from "rxjs/Observable";
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/mergeMap';
+import {DataEntity} from "../data.service";
 
 interface HistoryItem {
   id: number;
@@ -152,20 +153,20 @@ export class HistoryPageComponent implements OnInit {
 
       setTimeout(() => transaction.isMarkedForRemoval = false, 5000);
     } else {
-      let loaded = Observable.of(true);
+      let loaded: Observable<boolean | DataEntity> = Observable.of(true);
 
       if (transaction.type === 'transfer') {
-        loaded
+        loaded = loaded
           .mergeMap(() => this.expenseService.delete(transaction.expense, true))
           .mergeMap(() => this.incomeService.delete(transaction.income));
       }
 
       if (transaction.type === 'expense') {
-        loaded.mergeMap(() => this.expenseService.delete(transaction.expense));
+        loaded = loaded.mergeMap(() => this.expenseService.delete(transaction.expense));
       }
 
       if (transaction.type === 'income') {
-        loaded.mergeMap(() => this.incomeService.delete(transaction.income));
+        loaded = loaded.mergeMap(() => this.incomeService.delete(transaction.income));
       }
 
       loaded.subscribe();
