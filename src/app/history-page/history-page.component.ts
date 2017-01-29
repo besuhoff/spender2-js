@@ -10,6 +10,7 @@ import {PaymentMethod} from "../payment-method.service";
 import {Observable} from "rxjs/Observable";
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/mergeMap';
+import {DataEntity} from "../data.service";
 
 interface HistoryItem {
   id: number;
@@ -37,7 +38,7 @@ interface MonthStruct {
 @Component({
   selector: 'history-page',
   templateUrl: './history-page.component.html',
-  styleUrls: ['./history-page.component.css']
+  styleUrls: ['./history-page.component.scss']
 })
 export class HistoryPageComponent implements OnInit {
 
@@ -64,7 +65,7 @@ export class HistoryPageComponent implements OnInit {
           createdAt: createdAt,
           income: income,
           type: 'income',
-          routeName: 'incomes',
+          routeName: 'income',
           category: income.incomeCategory,
           createdAtDate: createdAt.format('DD/MM, dddd'),
           createdAtMonthId: createdAt.format('YYYY-MM'),
@@ -77,6 +78,7 @@ export class HistoryPageComponent implements OnInit {
         };
 
         if (income.sourceExpense) {
+          entity.id = income.sourceExpense.id;
           entity.type = 'transfer';
           entity.routeName = 'transfers';
           entity.expense = income.sourceExpense;
@@ -151,20 +153,20 @@ export class HistoryPageComponent implements OnInit {
 
       setTimeout(() => transaction.isMarkedForRemoval = false, 5000);
     } else {
-      let loaded = Observable.of(true);
+      let loaded: Observable<boolean | DataEntity> = Observable.of(true);
 
       if (transaction.type === 'transfer') {
-        loaded
+        loaded = loaded
           .mergeMap(() => this.expenseService.delete(transaction.expense, true))
           .mergeMap(() => this.incomeService.delete(transaction.income));
       }
 
       if (transaction.type === 'expense') {
-        loaded.mergeMap(() => this.expenseService.delete(transaction.expense));
+        loaded = loaded.mergeMap(() => this.expenseService.delete(transaction.expense));
       }
 
       if (transaction.type === 'income') {
-        loaded.mergeMap(() => this.incomeService.delete(transaction.income));
+        loaded = loaded.mergeMap(() => this.incomeService.delete(transaction.income));
       }
 
       loaded.subscribe();
