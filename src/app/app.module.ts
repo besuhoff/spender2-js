@@ -80,7 +80,6 @@ import { LoginFormComponent } from './login-form/login-form.component';
     LaddaModule.forRoot({
       style: 'slide-right',
       spinnerColor: '#2D2B29'
-
     }),
     NgbModule.forRoot(),
     ChartsModule,
@@ -96,9 +95,7 @@ import { LoginFormComponent } from './login-form/login-form.component';
     HttpClientService,
     {
       provide: HttpClientService,
-      useFactory: (backend: XHRBackend, options: RequestOptions, gapiService: GapiService) => {
-        return new HttpClientService(backend, options, gapiService);
-      },
+      useFactory: httpFactory,
       deps: [XHRBackend, RequestOptions, GapiService]
     },
     IncomeService,
@@ -119,3 +116,8 @@ import { LoginFormComponent } from './login-form/login-form.component';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+export function httpFactory(backend: XHRBackend, options: RequestOptions, gapiService: GapiService) {
+  return new HttpClientService(backend, options, gapiService);
+}
+

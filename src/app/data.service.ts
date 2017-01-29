@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/operator/map';
 import 'rxjs/add/operator/share';
-import 'rxjs/add/operator/cache';
 import { HttpClientService } from "./http-client.service";
 
 export abstract class DataEntity {
@@ -65,11 +64,11 @@ export abstract class DataService<T extends DataEntity> {
   loadAll(): Observable<T[]> {
     if (!this._entitiesDeferred) {
       this._entitiesDeferred = this._http.get(this._getEntityUrl())
-        .map<T[]>((response: Response) => {
+        .map((response: Response) => {
           this._entities = response.json().map(data => new (this._getEntityClass())(data, this.injector));
 
           return this._entities;
-        }).cache();
+        }).share();
     }
 
     return this._entitiesDeferred;
@@ -77,7 +76,7 @@ export abstract class DataService<T extends DataEntity> {
 
   add(data: {}, suppressListChange: boolean = false): Observable<T> {
     return this._http.post(this._getEntityUrl(), data)
-      .map<T>(data => {
+      .map(data => {
         let entity = new (this._getEntityClass())(data.json(), this.injector);
         this._entities.push(entity);
         if (!suppressListChange) {
@@ -85,27 +84,27 @@ export abstract class DataService<T extends DataEntity> {
         }
 
         return entity;
-      }).cache();
+      }).share();
   };
 
   update(entity: T, suppressListChange: boolean = false): Observable<T> {
-    return this._http.patch(this._getEntityUrl(entity.id), entity.toUpdateData()).map<T>(() => {
+    return this._http.patch(this._getEntityUrl(entity.id), entity.toUpdateData()).map(() => {
       if (!suppressListChange) {
         this.recordListChange();
       }
 
       return entity;
-    }).cache();
+    }).share();
   };
 
-  delete(entity, suppressListChange: boolean = false): Observable<T> {
-    return this._http.delete(this._getEntityUrl(entity.id)).map<T>(() => {
+  delete(entity: T, suppressListChange: boolean = false): Observable<T> {
+    return this._http.delete(this._getEntityUrl(entity.id)).map(() => {
       this._entities.splice(this._entities.indexOf(entity), 1);
       if (!suppressListChange) {
         this.recordListChange();
       }
 
       return entity;
-    }).cache();
+    }).share();
   };
 }
