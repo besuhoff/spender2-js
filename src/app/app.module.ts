@@ -45,6 +45,7 @@ import { LoginService } from './login.service';
 import { AuthService } from './auth.service';
 import { WizardService } from './wizard.service';
 import { UserService } from './user.service';
+import { SpeechService } from './speech.service';
 
 import { routing, appRoutingProviders } from './app.routing';
 import { LoginFormComponent } from './login-form/login-form.component';
@@ -111,6 +112,7 @@ import { LoginFormComponent } from './login-form/login-form.component';
     WizardService,
     UserService,
     CacheService,
+    SpeechService,
     AuthGuard
   ],
   entryComponents: [WizardComponent],

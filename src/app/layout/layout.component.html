@@ -56,13 +56,21 @@
 </nav>
 
 <div class="container navbar-padded">
-  <div class="media header" *ngIf="getProfile()">
-    <div class="media-left">
-      <div class="media-object user-avatar" [style]="profileImageStyle"></div>
+
+  <div class="row">
+    <div class="col-md-6 col-xs-9">
+      <div class="media header" *ngIf="getProfile()">
+        <div class="media-left">
+          <div class="media-object user-avatar" [style]="profileImageStyle"></div>
+        </div>
+        <div class="media-body">
+          <h4 class="media-heading">Хэй, {{getProfile().getGivenName()}}!</h4>
+          <a (click)="signOut(); $event.preventDefault();" href=""><i class="fa fa-sign-out fa-lg"></i> Выйти</a>
+        </div>
+      </div>
     </div>
-    <div class="media-body">
-      <h4 class="media-heading">Хэй, {{getProfile().getGivenName()}}!</h4>
-      <a (click)="signOut(); $event.preventDefault();" href=""><i class="fa fa-sign-out fa-lg"></i> Выйти</a>
+    <div class="col-md-6 col-xs-3 text-right">
+      <i class="fa fa-3x fa-microphone speech-button" ng-click="$ctrl.recognizeSpeech()"></i>
     </div>
   </div>
 
