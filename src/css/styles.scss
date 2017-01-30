@@ -114,6 +114,10 @@ a {
   padding-top: 54px;
 }
 
+.navbar-fixed-top .navbar-collapse {
+  max-height: none;
+}
+
 spinner {
   display: inline-block;
   vertical-align: middle;
@@ -212,4 +216,20 @@ $directions-full: left right top bottom;
   }
 
   padding-bottom: 10px;
+}
+
+.fade.show {
+  opacity: 1;
+}
+
+.modal-backdrop.show {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+
+.modal.show .modal-dialog {
+  -webkit-transform: translate(0, 0);
+  -ms-transform: translate(0, 0);
+  -o-transform: translate(0, 0);
+  transform: translate(0, 0);
 }

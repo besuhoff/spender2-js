@@ -3,15 +3,16 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/forkJoin';
 
-import { Expense, ExpenseService } from './expense.service';
-import { Income, IncomeService } from './income.service';
-import { Category, CategoryService } from './category.service';
-import { IncomeCategory, IncomeCategoryService } from './income-category.service';
-import { PaymentMethod, PaymentMethodService } from './payment-method.service';
-import { Currency, CurrencyService } from './currency.service';
+import { ExpenseService } from './expense.service';
+import { IncomeService } from './income.service';
+import { CategoryService } from './category.service';
+import { IncomeCategoryService } from './income-category.service';
+import { PaymentMethodService } from './payment-method.service';
+import { CurrencyService } from './currency.service';
 import {Subject} from "rxjs/Subject";
 import {DataEntity} from "./data.service";
 import {Subscription} from "rxjs/Subscription";
+import {LimitService} from "./limit.service";
 
 @Injectable()
 export class CacheService {
@@ -28,14 +29,16 @@ export class CacheService {
     expenses: Subject<boolean>,
     incomes: Subject<boolean>,
     currencies: Subject<boolean>,
-    paymentMethods: Subject<boolean>
+    paymentMethods: Subject<boolean>,
+    limits: Subject<boolean>
   } = {
     incomeCategories: new Subject(),
     categories: new Subject(),
     expenses: new Subject(),
     incomes: new Subject(),
     currencies: new Subject(),
-    paymentMethods: new Subject()
+    paymentMethods: new Subject(),
+    limits: new Subject()
   };
 
   constructor(
@@ -44,6 +47,7 @@ export class CacheService {
     private categoryService: CategoryService,
     private expenseService: ExpenseService,
     private paymentMethodService: PaymentMethodService,
+    private limitService: LimitService,
     private currencyService: CurrencyService
   ) {
 
@@ -77,9 +81,13 @@ export class CacheService {
     return this.isPartLoaded.paymentMethods;
   }
 
+  isLimitsLoaded() {
+    return this.isPartLoaded.limits;
+  }
+
   refreshPaymentMethods() {
     this.paymentMethodService.resetAll().loadAll()
-      .subscribe((paymentMethods) => {
+      .subscribe(() => {
         this.paymentMethodService.recordListChange();
       });
   }
@@ -93,6 +101,7 @@ export class CacheService {
       this.incomeCategoryService,
       this.categoryService,
       this.paymentMethodService,
+      this.limitService,
       this.currencyService
     ].forEach(function(service) {
       service.resetAll();
@@ -117,17 +126,19 @@ export class CacheService {
 
     return Observable.forkJoin([
       this.incomeCategoryService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.incomeCategories.next(true); }; return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.incomeCategories.next(true); } return data }),
       this.categoryService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.categories.next(true); }; return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.categories.next(true); } return data }),
       this.expenseService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.expenses.next(true); }; return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.expenses.next(true); } return data }),
       this.incomeService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.incomes.next(true); }; return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.incomes.next(true); } return data }),
       this.currencyService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.currencies.next(true); }; return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.currencies.next(true); } return data }),
       this.paymentMethodService.loadAll()
-        .map((data) => { if (!this.hasData()) { this.isPartLoaded.paymentMethods.next(true); }; return data }),
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.paymentMethods.next(true); } return data }),
+      this.limitService.loadAll()
+        .map((data) => { if (!this.hasData()) { this.isPartLoaded.limits.next(true); } return data }),
     ]).map(results => {
       if (!this.hasData()) {
 
@@ -137,6 +148,7 @@ export class CacheService {
           this.incomeCategoryService,
           this.categoryService,
           this.paymentMethodService,
+          this.limitService,
           this.currencyService
         ].forEach(function(service) {
           service.recordListChange();

@@ -15,14 +15,16 @@ export class LoaderComponent implements OnInit, OnDestroy {
     expenses: boolean,
     incomes: boolean,
     currencies: boolean,
-    paymentMethods: boolean
+    paymentMethods: boolean,
+    limits: boolean
   } = {
     incomeCategories: false,
     categories: false,
     expenses: false,
     incomes: false,
     currencies: false,
-    paymentMethods: false
+    paymentMethods: false,
+    limits: false
   };
 
   private itemsToLoad: string[];
@@ -40,6 +42,7 @@ export class LoaderComponent implements OnInit, OnDestroy {
       this.cacheService.isIncomesLoaded().subscribe((isLoaded) => this.itemsLoaded.incomes = isLoaded),
       this.cacheService.isCurrenciesLoaded().subscribe((isLoaded) => this.itemsLoaded.currencies = isLoaded),
       this.cacheService.isPaymentMethodsLoaded().subscribe((isLoaded) => this.itemsLoaded.paymentMethods = isLoaded),
+      this.cacheService.isLimitsLoaded().subscribe((isLoaded) => this.itemsLoaded.limits = isLoaded),
     ];
   }
 

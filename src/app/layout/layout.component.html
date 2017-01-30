@@ -12,14 +12,19 @@
 
     <div class="collapse navbar-collapse" id="header-navbar" data-toggle="collapse" data-target="#header-navbar.collapse.in">
       <ul class="nav navbar-nav main-menu">
-        <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--expenses">
-          <a routerLink="/expenses">Траты</a>
-        </li>
-        <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--income">
-          <a routerLink="/income">Доход</a>
-        </li>
-        <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--transfers">
-          <a routerLink="/transfers">Переводы</a>
+        <li class="dropdown main-menu__tab main-menu__tab--dropdown main-menu__tab--operations">
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Операции <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--expenses">
+              <a routerLink="/expenses">Траты</a>
+            </li>
+            <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--income">
+              <a routerLink="/income">Доход</a>
+            </li>
+            <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--transfers">
+              <a routerLink="/transfers">Переводы</a>
+            </li>
+          </ul>
         </li>
         <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--categories">
           <a routerLink="/categories">Категории</a>
@@ -27,8 +32,16 @@
         <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--income-categories">
           <a routerLink="/income-categories">Источники</a>
         </li>
-        <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--payment-methods">
-          <a routerLink="/payment-methods">Счета</a>
+        <li class="dropdown main-menu__tab main-menu__tab--dropdown main-menu__tab--management">
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Управление счетами <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--payment-methods">
+              <a routerLink="/payment-methods">Счета</a>
+            </li>
+            <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--limits">
+              <a routerLink="/limits">Лимиты</a>
+            </li>
+          </ul>
         </li>
         <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--charts">
           <a routerLink="/charts">Отчеты</a>
@@ -48,7 +61,7 @@
              data-container="#navbar_fixed"
              data-placement="left"
              data-content="Хорошо, о смельчак. Я в любой момент готова прийти на помощь вновь."
-             href=""><span>?</span></a>
+             href=""><span>Помощь</span></a>
         </li>
       </ul>
     </div>

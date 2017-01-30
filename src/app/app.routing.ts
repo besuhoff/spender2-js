@@ -11,7 +11,8 @@ import { IncomePageComponent } from './income-page/income-page.component';
 import { PaymentMethodsPageComponent } from './payment-methods-page/payment-methods-page.component';
 import { TransfersPageComponent } from './transfers-page/transfers-page.component';
 import { AuthGuard } from './auth-guard';
-import {ChartsPageComponent} from "./charts-page/charts-page.component";
+import {ChartsPageComponent} from './charts-page/charts-page.component';
+import {LimitsPageComponent} from './limits-page/limits-page.component';
 
 const appRoutes: Routes = [
     { path: 'login', component: LoginPageComponent },
@@ -56,6 +57,10 @@ const appRoutes: Routes = [
             {
                 path: 'payment-methods',
                 component: PaymentMethodsPageComponent
+            },
+            {
+                path: 'limits',
+                component: LimitsPageComponent
             },
             {
                 path: 'history',
