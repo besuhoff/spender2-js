@@ -21,7 +21,7 @@ const appRoutes: Routes = [
         canActivateChild: [AuthGuard],
         children: [
             {
-                path: 'operations',
+                path: 'operations/:type',
                 component: OperationsPageComponent
             },
             {
@@ -55,7 +55,7 @@ const appRoutes: Routes = [
             {
                 path: '',
                 pathMatch: 'full',
-                redirectTo: '/operations?type=expense'
+                redirectTo: '/operations/expense'
             }
         ]
     },

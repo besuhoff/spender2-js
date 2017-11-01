@@ -1,0 +1,126 @@
+<div class="panel panel-default" *ngIf="isHintVisible()">
+  <div class="panel-heading">
+    <h3>Счета</h3>
+  </div>
+  <div class="panel-body">
+    <div class="m-b-md">
+      <p>Задайте счета или другие платёжные средства. Например: &laquo;наличные&raquo;, &laquo;карта сбербанка&raquo;, &laquo;отложено&raquo;, &laquo;абонемент в&nbsp;клуб&raquo;, &laquo;доллары&raquo;.</p>
+      <p>На&nbsp;странице истории полностью помещаются только короткие названия, лучше всего из&nbsp;одного слова.</p>
+      <p>В&nbsp;поле &laquo;вход&raquo; введите сумму на&nbsp;этом счету на&nbsp;сегодняшний день, например, &laquo;наличные долл.&raquo; и&nbsp;&laquo;500&raquo;, если у&nbsp;вас 500 долларов наличными.</p>
+      <p>Для счетов тоже можно назначать цвет. Он&nbsp;будет использован при выводе графика остатков.</p>
+      <p>Когда закончите со&nbsp;счетами, я&nbsp;провожу вас по&nbsp;настройкам источников доходов.</p>
+    </div>
+
+    <div class="button-holder m-b-n-sm">
+      <span><button class="btn m-b-sm btn-primary" (click)="nextStep()" [disabled]="isWizardLoading" [ladda]="isWizardNextStepLoading">Перейти к настройкам доходов</button></span>
+      <span class="m-l-xs"><button class="btn m-b-sm btn-default " (click)="close()" [disabled]="isWizardLoading" [ladda]="isWizardCloseLoading">Мне больше не нужны подсказки</button></span>
+    </div>
+  </div>
+</div>
+
+<div class="form">
+  <ul class="list-unstyled list-form">
+    <li *ngFor="let limit of limits">
+      <input class="form-control"
+             type="text"
+             placeholder="Название"
+             (ngModelChange)="saveLimit(limit)"
+             [(ngModel)]="limit.name">,
+      <span class="text-nowrap">
+        категории:
+
+        <select class="form-control form-control--sm"
+                multiple
+                [(ngModel)]="limit.categories"
+                (ngModelChange)="saveLimit(limit)">
+          <option *ngFor="let category of categories"
+                  [ngValue]="category">{{ category.name }}</option>
+        </select>
+
+      </span>,
+      <span class="text-nowrap">
+        счета:
+
+        <select class="form-control form-control--sm"
+                multiple
+                [(ngModel)]="limit.paymentMethods"
+                (ngModelChange)="saveLimit(limit)">
+          <option *ngFor="let paymentMethod of paymentMethods"
+                  [ngValue]="paymentMethod"
+                  [disabled]="limit.paymentMethods.length && limit.paymentMethods[0].currencyId !== paymentMethod.currencyId">{{ paymentMethod.name }}</option>
+        </select>
+
+      </span>,
+      <span class="text-nowrap">
+        ограничение:
+        <input class="form-control form-control--sm"
+               type="number"
+               placeholder="0.00"
+               (ngModelChange)="saveLimit(limit)"
+               [(ngModel)]="limit.value">
+      </span>
+
+      <colorpicker [(ngModel)]="limit.color"
+                   [disabledOptions]="selectedColors"
+                   (ngModelChange)="updateSelectedColors(); saveLimit(limit)">
+
+      </colorpicker>
+      <spinner [isLoaded]="isLoaded[limit.id]"></spinner>
+      <button class="btn-default btn-sm btn btn-inline" (click)="deleteLimit(limit)"><i class="fa fa-lg fa-remove"></i></button>
+    </li>
+
+    <li>
+      <input class="form-control" type="text" placeholder="Название" [(ngModel)]="limit.name">,
+      <span class="text-nowrap">
+        категории:
+
+        <select class="form-control form-control--sm"
+                multiple
+                [(ngModel)]="limit.categories">
+          <option *ngFor="let category of categories"
+                  [ngValue]="category">{{ category.name }}</option>
+        </select>
+
+      </span>,
+      <span class="text-nowrap">
+        счета:
+
+        <select class="form-control form-control--sm"
+                multiple
+                [(ngModel)]="limit.paymentMethods">
+          <option *ngFor="let paymentMethod of paymentMethods"
+                  [ngValue]="paymentMethod"
+                  [disabled]="limit.paymentMethods.length && limit.paymentMethods[0].currencyId !== paymentMethod.currencyId">{{ paymentMethod.name }}</option>
+        </select>
+
+      </span>,
+      <span class="text-nowrap">
+        ограничение:
+        <input class="form-control form-control--sm"
+               type="number"
+               placeholder="0.00"
+               [(ngModel)]="limit.value">
+      </span>
+      <colorpicker [(ngModel)]="limit.color"
+                   [disabledOptions]="selectedColors"
+                   (ngModelChange)="updateSelectedColors()">
+
+      </colorpicker>
+      <spinner [isLoaded]="isNewLoaded"></spinner>
+
+      <div class="button-hint">
+        <div class="button-hint__inner">
+          <button class="btn-primary btn-sm btn btn-inline"
+                  [disabled]="!limit.name || !limit.currency"
+                  (click)="addMethod()">Добавить средство</button>
+          <div class="button-hint__text" *ngIf="!limit.name || !limit.currency">
+            Укажите
+            <span *ngIf="!limit.name">название</span>
+            <span *ngIf="!limit.name && !limit.currency">и</span>
+            <span *ngIf="!limit.currency">валюту</span>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

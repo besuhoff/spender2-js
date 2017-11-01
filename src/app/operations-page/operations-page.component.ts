@@ -127,7 +127,7 @@ export class OperationsPageComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.queryParams
+    this.route.params
       .subscribe((params) => {
         this.entityType = params['type'];
         this.startOfMonth = moment().startOf('month').toDate();
@@ -167,6 +167,11 @@ export class OperationsPageComponent implements OnInit {
         this.incomeCategories = this.incomeCategoryService.getAll().filter((item) => !item._isRemoved);
         this.categories = this.categoryService.getAll().filter((item) => !item._isRemoved);
       });
+  }
+
+  setEntityType(val: 'income'|'expense'|'transfer') {
+    this.entityType = val;
+    this.router.navigate(['operations', val]);
   }
 
   getTargetAmount(): number | null {

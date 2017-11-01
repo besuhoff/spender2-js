@@ -63,7 +63,8 @@
 
 <div class="form">
   <div *ngIf="entityType === 'expense'">
-    Потратил
+    <span class="pseudo-link" (click)="setEntityType('transfer')" *ngIf="!editMode">Потратил</span>
+    <span *ngIf="editMode">Потратил</span>
     <input autofocus class="form-control form-control--sm" type="number" name="amount" [(ngModel)]="expense.amount" placeholder="0.00"><span class="currency-symbol">{{expense.paymentMethod?.currency?.symbol}}</span>
     <select class="form-control form-control--lg"
             name="paymentMethod"
@@ -80,7 +81,8 @@
   </div>
 
   <div *ngIf="entityType === 'transfer'">
-    Перевёл
+    <span class="pseudo-link" (click)="setEntityType('income')" *ngIf="!editMode">Перевёл</span>
+    <span *ngIf="editMode">Перевёл</span>
     <input autofocus class="form-control form-control--sm" type="number" name="amount" [(ngModel)]="transferExpense.amount" placeholder="0.00"><span class="currency-symbol">{{transferExpense.paymentMethod?.currency?.symbol}}</span>
     <select class="form-control form-control--lg"
             name="expensePaymentMethod"
@@ -119,7 +121,8 @@
   </div>
 
   <div *ngIf="entityType === 'income'">
-    Получил
+    <span class="pseudo-link" (click)="setEntityType('expense')" *ngIf="!editMode">Получил</span>
+    <span *ngIf="editMode">Получил</span>
     <input autofocus class="form-control" type="number" name="amount" [(ngModel)]="income.amount" placeholder="0.00"><span class="currency-symbol">{{income.paymentMethod?.currency?.symbol}}</span>
     <select class="form-control form-control--lg"
             name="paymentMethod"

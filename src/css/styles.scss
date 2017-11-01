@@ -18,6 +18,11 @@ a {
   }
 }
 
+.pseudo-link {
+  cursor: pointer;
+  border-bottom: 1px dashed;
+}
+
 .btn {
   &:hover {
     margin-top: 0;

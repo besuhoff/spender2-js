@@ -18,8 +18,8 @@
 </div>
 
 <h5 *ngIf="!history.length">
-  Вы не записали ни одной транзакции. Запишите <a [routerLink]="'/operations?type=income'">доход</a>, <a [routerLink]="'/operations?type=expense'">трату</a>
-  или <a [routerLink]="'/operations?type=transfer'">перевод</a>, чтобы увидеть историю платежей.
+  Вы не записали ни одной транзакции. Запишите <a [routerLink]="'/operations/income'">доход</a>, <a [routerLink]="'/operations/expense'">трату</a>
+  или <a [routerLink]="'/operations/transfer'">перевод</a>, чтобы увидеть историю платежей.
 </h5>
 
 <div *ngIf="history.length" class="text-center">
@@ -60,7 +60,7 @@
         </div>
 
         <div class="history__col history__actions">
-          <a class="fa fa-pencil fa-lg" [routerLink]="'/operations?type=' + record.type + '&id=' + record.id"></a><!--
+          <a class="fa fa-pencil fa-lg" [routerLink]="'/operations/' + record.type + '?id=' + record.id"></a><!--
         --><span class="fa fa-close fa-lg"
                  [class.active]="record.isMarkedForRemoval"
                  (click)="removeTransaction(record); $event.stopPropagation();"></span>
