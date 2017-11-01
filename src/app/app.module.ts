@@ -12,13 +12,10 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { CategoriesPageComponent } from './categories-page/categories-page.component';
-import { ExpensesPageComponent } from './expenses-page/expenses-page.component';
 import { HistoryPageComponent } from './history-page/history-page.component';
 import { IncomeCategoriesPageComponent } from './income-categories-page/income-categories-page.component';
-import { IncomePageComponent } from './income-page/income-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { PaymentMethodsPageComponent } from './payment-methods-page/payment-methods-page.component';
-import { TransfersPageComponent } from './transfers-page/transfers-page.component';
 import { LayoutComponent } from './layout/layout.component';
 import { WizardComponent } from './wizard/wizard.component';
 import { SigninComponent } from './signin/signin.component';
@@ -28,6 +25,7 @@ import { LoaderComponent } from './loader/loader.component';
 import { ColorpickerComponent } from './colorpicker/colorpicker.component';
 import { DatetimeComponent } from './datetime/datetime.component';
 import { ChartsPageComponent } from './charts-page/charts-page.component';
+import { OperationsPageComponent } from './operations-page/operations-page.component';
 
 import { AuthGuard } from "./auth-guard";
 import {HttpClientService} from "./http-client.service";
@@ -44,24 +42,21 @@ import { LoginService } from './login.service';
 import { AuthService } from './auth.service';
 import { WizardService } from './wizard.service';
 import { UserService } from './user.service';
+import {LimitService} from "./limit.service";
 
 import { routing, appRoutingProviders } from './app.routing';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { LimitsPageComponent } from './limits-page/limits-page.component';
-import {LimitService} from "./limit.service";
 
 
 @NgModule({
   declarations: [
     AppComponent,
     CategoriesPageComponent,
-    ExpensesPageComponent,
     HistoryPageComponent,
     IncomeCategoriesPageComponent,
-    IncomePageComponent,
     LoginPageComponent,
     PaymentMethodsPageComponent,
-    TransfersPageComponent,
     LayoutComponent,
     WizardComponent,
     SigninComponent,
@@ -72,7 +67,8 @@ import {LimitService} from "./limit.service";
     DatetimeComponent,
     ChartsPageComponent,
     LoginFormComponent,
-    LimitsPageComponent
+    LimitsPageComponent,
+    OperationsPageComponent
   ],
   imports: [
     BrowserModule,

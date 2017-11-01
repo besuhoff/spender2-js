@@ -68,37 +68,73 @@
     }
   }
 
+  div.ngb-tp-spacer {
+    width: 0.5em;
+  }
+
   ngb-datepicker {
+    &:focus {
+      outline: none;
+    }
+
+    border: 1px solid #e7e7e7;
+    border-width: 1px 1px 4px;
     background: #f8f8f8;
     margin-left: -10px;
 
-    .btn-secondary {
-      padding: 0 10px;
-      line-height: 28px;
+    .d-flex {
+      display: flex;
     }
 
-    .text-xs-center.font-weight-bold {
-      font-weight: 600;
-      font-size: 18px;
-      text-align: center;
-      line-height: 34px;
+    .ngb-dp-day, .ngb-dp-weekday {
+      flex: 1 1 0;
+      width: auto;
+      height: auto;
+    }
 
-      &.weekday {
-        line-height: 28px;
-        font-size: 14px;
-      }
+    .bg-primary {
+      color: #fff;
+      background-color: #158cba !important;
+    }
+
+    .btn-light {
+      padding: 0 10px;
+      line-height: 28px;
+      width: auto;
+      height: auto;
+    }
+
+    .ngb-dp-weekday {
+      font-weight: 600;
+      font-style: normal;
+      text-align: center;
+      line-height: 28px;
+      font-size: 14px;
+      color: inherit;
+    }
+
+    .ngb-dp-header {
+      margin-bottom: -10px;
+      border-bottom: none;
+    }
+
+    .ngb-dp-month-name {
+      font-weight: 600;
+      font-style: normal;
+      text-align: center;
+      font-size: 18px;
+      line-height: 34px;
+      height: auto;
     }
 
     &-navigation {
-      table {
-        width: 100%;
-      }
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 0;
+      height: auto;
 
-      .text-sm-left {
-        text-align: left;
-      }
-      .text-sm-right {
-        text-align: right;
+      .btn-link {
+        padding: 10px;
       }
     }
   }

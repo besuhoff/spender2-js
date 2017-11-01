@@ -95,15 +95,15 @@ export class WizardService {
     }
 
     if (this.isExpenseHintVisible()) {
-      this.router.navigate(['/expenses']);
+      this.router.navigate(['/operations', { type: 'expense' }]);
     }
 
     if (this.isIncomeHintVisible()) {
-      this.router.navigate(['/income']);
+      this.router.navigate(['/operations', { type: 'income' }]);
     }
 
     if (this.isTransferHintVisible()) {
-      this.router.navigate(['/transfers']);
+      this.router.navigate(['/operations', { type: 'transfer' }]);
     }
 
     if (this.isHistoryHintVisible()) {

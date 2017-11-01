@@ -4,12 +4,10 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { LayoutComponent } from './layout/layout.component';
 import { CategoriesPageComponent } from './categories-page/categories-page.component';
-import { ExpensesPageComponent } from './expenses-page/expenses-page.component';
 import { HistoryPageComponent } from './history-page/history-page.component';
 import { IncomeCategoriesPageComponent } from './income-categories-page/income-categories-page.component';
-import { IncomePageComponent } from './income-page/income-page.component';
 import { PaymentMethodsPageComponent } from './payment-methods-page/payment-methods-page.component';
-import { TransfersPageComponent } from './transfers-page/transfers-page.component';
+import { OperationsPageComponent } from './operations-page/operations-page.component';
 import { AuthGuard } from './auth-guard';
 import {ChartsPageComponent} from './charts-page/charts-page.component';
 import {LimitsPageComponent} from './limits-page/limits-page.component';
@@ -23,28 +21,8 @@ const appRoutes: Routes = [
         canActivateChild: [AuthGuard],
         children: [
             {
-                path: 'expenses',
-                component: ExpensesPageComponent
-            },
-            {
-                path: 'expenses/:id',
-                component: ExpensesPageComponent
-            },
-            {
-                path: 'income',
-                component: IncomePageComponent
-            },
-            {
-                path: 'income/:id',
-                component: IncomePageComponent
-            },
-            {
-                path: 'transfers',
-                component: TransfersPageComponent
-            },
-            {
-                path: 'transfers/:id',
-                component: TransfersPageComponent
+                path: 'operations',
+                component: OperationsPageComponent
             },
             {
                 path: 'categories',
@@ -77,7 +55,7 @@ const appRoutes: Routes = [
             {
                 path: '',
                 pathMatch: 'full',
-                redirectTo: '/expenses'
+                redirectTo: '/operations?type=expense'
             }
         ]
     },
