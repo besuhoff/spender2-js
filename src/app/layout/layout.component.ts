@@ -18,9 +18,10 @@ import 'rxjs/add/operator/pluck';
 })
 export class LayoutComponent implements OnInit {
 
-  private paymentMethods: PaymentMethod[] = [];
   private paymentMethodsListChangedAt: Subscription;
-  private profileImageStyle: SafeStyle;
+
+  public profileImageStyle: SafeStyle;
+  public paymentMethods: PaymentMethod[] = [];
   public operationType$: Observable<string>;
 
   public getProfile(): Profile {

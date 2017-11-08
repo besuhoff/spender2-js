@@ -19,10 +19,11 @@ const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR = {
 })
 export class DatetimeComponent implements OnInit, ControlValueAccessor {
   private _value: any = '';
-  private date: NgbDateStruct;
-  private time: NgbTimeStruct;
-  private disabled: boolean;
   private ngbDatepicker: NgbInputDatepicker;
+
+  public date: NgbDateStruct;
+  public time: NgbTimeStruct;
+  public disabled: boolean;
 
   get value(): any { return this._value; };
 

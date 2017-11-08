@@ -8,12 +8,13 @@ import {WizardService} from "../wizard.service";
 })
 export class WizardComponent implements OnInit {
 
-  private loading = {
+  private wizardService: WizardService;
+
+  public loading = {
     data: false,
     nextStep: false,
     closing: false
   };
-  private wizardService: WizardService;
 
   constructor() { }
 

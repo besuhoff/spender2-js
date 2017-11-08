@@ -44,10 +44,11 @@ export class HistoryPageComponent implements OnInit {
   private isWizardLoading: boolean = false;
   private isWizardCloseLoading: boolean = false;
 
-  private history: HistoryItem[];
-  private months: MonthStruct[];
-  private currentMonth: string;
   private monthsMap: {};
+
+  public currentMonth: string;
+  public months: MonthStruct[];
+  public history: HistoryItem[];
 
   private _initHistory() {
     let history: HistoryItem[] = [];

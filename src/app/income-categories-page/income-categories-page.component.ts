@@ -21,18 +21,19 @@ export class IncomeCategoriesPageComponent implements OnInit {
   private isWizardNextStepLoading: boolean = false;
   private isWizardCloseLoading: boolean = false;
 
-  private isLoaded: { [propName: string]: Observable<IncomeCategory> } = {};
-  private category: IncomeCategory;
   private income: Income[] = [];
   private lastMonthIncome: Income[] = [];
   private paymentMethods: PaymentMethod[] = [];
-  private categories: IncomeCategory[] = [];
   private startOfMonth: Date;
-  private categoriesChart = [];
   private incomeServiceListChangedAt: Subscription;
-  private isNewLoaded: Observable<IncomeCategory>;
-  private selectedColors: string[];
   private _debounceTimeout: Timer;
+  private isLoaded: { [propName: string]: Observable<IncomeCategory> } = {};
+
+  public isNewLoaded: Observable<IncomeCategory>;
+  public categoriesChart = [];
+  public selectedColors: string[];
+  public category: IncomeCategory;
+  public categories: IncomeCategory[] = [];
 
   private _initCategories() {
     this.income = this.incomeService.getAll().filter(function(item) { return !item._isRemoved; });

@@ -15,14 +15,14 @@ export class PaymentMethodsPageComponent implements OnInit {
   private isWizardLoading: boolean = false;
   private isWizardNextStepLoading: boolean = false;
   private isWizardCloseLoading: boolean = false;
-
-  private paymentMethod: PaymentMethod;
-  private paymentMethods: PaymentMethod[];
-  private currencies: Currency[];
-  private isNewLoaded: Observable<PaymentMethod>;
-  private isLoaded: { [propName: string]: Observable<PaymentMethod> } = {};
-  private selectedColors: string[];
   private _debounceTimeout: Timer;
+
+  public isNewLoaded: Observable<PaymentMethod>;
+  public isLoaded: { [propName: string]: Observable<PaymentMethod> } = {};
+  public paymentMethod: PaymentMethod;
+  public paymentMethods: PaymentMethod[];
+  public currencies: Currency[];
+  public selectedColors: string[];
 
   private _initMethods() {
     this.paymentMethods = this.paymentMethodService.getAll().filter(function(item) { return !item._isRemoved; });

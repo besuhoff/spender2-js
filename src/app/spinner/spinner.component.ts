@@ -9,8 +9,9 @@ import {Observable} from "rxjs/Observable";
 export class SpinnerComponent implements OnInit, OnChanges {
 
   @Input() private isLoaded: Observable<any>;
-  private isPending: boolean = false;
-  private isSaved: boolean = false;
+
+  public isPending: boolean = false;
+  public isSaved: boolean = false;
 
   constructor() { }
 

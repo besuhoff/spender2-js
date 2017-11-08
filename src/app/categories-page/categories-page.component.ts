@@ -21,18 +21,19 @@ export class CategoriesPageComponent implements OnInit {
   private isWizardNextStepLoading: boolean = false;
   private isWizardCloseLoading: boolean = false;
 
-  private isLoaded: { [propName: string]: Observable<Category> } = {};
-  private category: Category;
   private expenses: Expense[] = [];
   private lastMonthExpenses: Expense[] = [];
   private paymentMethods: PaymentMethod[] = [];
-  private categories: Category[] = [];
   private startOfMonth: Date;
-  private categoriesChart = [];
   private expenseServiceListChangedAt: Subscription;
-  private isNewLoaded: Observable<Category>;
-  private selectedColors: string[];
   private _debounceTimeout: Timer;
+  private isLoaded: { [propName: string]: Observable<Category> } = {};
+
+  public isNewLoaded: Observable<Category>;
+  public categoriesChart = [];
+  public selectedColors: string[];
+  public category: Category;
+  public categories: Category[] = [];
 
   private _initCategories() {
     this.expenses = this.expenseService.getAll().filter(function(item) { return !item._isRemoved; });

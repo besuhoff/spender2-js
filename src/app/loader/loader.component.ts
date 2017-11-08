@@ -27,8 +27,9 @@ export class LoaderComponent implements OnInit, OnDestroy {
     limits: false
   };
 
-  private itemsToLoad: string[];
   private subscriptions: Subscription[] = [];
+
+  public itemsToLoad: string[];
 
   constructor(private cacheService: CacheService) {
     this.itemsToLoad = Object.keys(this.itemsLoaded);
