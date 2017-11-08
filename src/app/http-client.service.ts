@@ -7,8 +7,7 @@ import "rxjs/add/operator/mergeMap";
 
 @Injectable()
 export class HttpClientService extends Http {
-  //protected static get _baseUrl(): string { return 'https://spender-api.pereborstudio.com' };
-  protected static get _baseUrl(): string { return 'http://spender-api.pereborstudio.develop:8090' };
+  protected static get _baseUrl(): string { return 'https://spender-api.pereborstudio.com' };
 
   constructor (backend: XHRBackend, options: RequestOptions, private gapiService: GapiService) {
     super(backend, options);
