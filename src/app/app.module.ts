@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule, XHRBackend, RequestOptions } from '@angular/http';
 
-import * as moment from 'moment';
 import 'moment/locale/ru';
 import {MomentModule} from 'angular2-moment';
 import 'chart.js';
@@ -13,13 +12,10 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { CategoriesPageComponent } from './categories-page/categories-page.component';
-import { ExpensesPageComponent } from './expenses-page/expenses-page.component';
 import { HistoryPageComponent } from './history-page/history-page.component';
 import { IncomeCategoriesPageComponent } from './income-categories-page/income-categories-page.component';
-import { IncomePageComponent } from './income-page/income-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { PaymentMethodsPageComponent } from './payment-methods-page/payment-methods-page.component';
-import { TransfersPageComponent } from './transfers-page/transfers-page.component';
 import { LayoutComponent } from './layout/layout.component';
 import { WizardComponent } from './wizard/wizard.component';
 import { SigninComponent } from './signin/signin.component';
@@ -29,6 +25,7 @@ import { LoaderComponent } from './loader/loader.component';
 import { ColorpickerComponent } from './colorpicker/colorpicker.component';
 import { DatetimeComponent } from './datetime/datetime.component';
 import { ChartsPageComponent } from './charts-page/charts-page.component';
+import { OperationsPageComponent } from './operations-page/operations-page.component';
 
 import { AuthGuard } from "./auth-guard";
 import {HttpClientService} from "./http-client.service";
@@ -45,22 +42,21 @@ import { LoginService } from './login.service';
 import { AuthService } from './auth.service';
 import { WizardService } from './wizard.service';
 import { UserService } from './user.service';
+import {LimitService} from "./limit.service";
 
 import { routing, appRoutingProviders } from './app.routing';
 import { LoginFormComponent } from './login-form/login-form.component';
+import { LimitsPageComponent } from './limits-page/limits-page.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     CategoriesPageComponent,
-    ExpensesPageComponent,
     HistoryPageComponent,
     IncomeCategoriesPageComponent,
-    IncomePageComponent,
     LoginPageComponent,
     PaymentMethodsPageComponent,
-    TransfersPageComponent,
     LayoutComponent,
     WizardComponent,
     SigninComponent,
@@ -70,7 +66,9 @@ import { LoginFormComponent } from './login-form/login-form.component';
     ColorpickerComponent,
     DatetimeComponent,
     ChartsPageComponent,
-    LoginFormComponent
+    LoginFormComponent,
+    LimitsPageComponent,
+    OperationsPageComponent
   ],
   imports: [
     BrowserModule,
@@ -79,7 +77,6 @@ import { LoginFormComponent } from './login-form/login-form.component';
     LaddaModule.forRoot({
       style: 'slide-right',
       spinnerColor: '#2D2B29'
-
     }),
     NgbModule.forRoot(),
     ChartsModule,
@@ -95,9 +92,7 @@ import { LoginFormComponent } from './login-form/login-form.component';
     HttpClientService,
     {
       provide: HttpClientService,
-      useFactory: (backend: XHRBackend, options: RequestOptions, gapiService: GapiService) => {
-        return new HttpClientService(backend, options, gapiService);
-      },
+      useFactory: httpFactory,
       deps: [XHRBackend, RequestOptions, GapiService]
     },
     IncomeService,
@@ -105,6 +100,7 @@ import { LoginFormComponent } from './login-form/login-form.component';
     CategoryService,
     IncomeCategoryService,
     PaymentMethodService,
+    LimitService,
     CurrencyService,
     LoginService,
     AuthService,
@@ -117,3 +113,8 @@ import { LoginFormComponent } from './login-form/login-form.component';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+
+export function httpFactory(backend: XHRBackend, options: RequestOptions, gapiService: GapiService) {
+  return new HttpClientService(backend, options, gapiService);
+}
+

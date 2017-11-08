@@ -53,24 +53,28 @@ export class WizardService {
     return this.step() === 3;
   }
 
-  isIncomeCategoryHintVisible(): boolean {
+  isLimitHintVisible(): boolean {
     return this.step() === 4;
   }
 
-  isExpenseHintVisible(): boolean {
+  isIncomeCategoryHintVisible(): boolean {
     return this.step() === 5;
   }
 
-  isIncomeHintVisible(): boolean {
+  isExpenseHintVisible(): boolean {
     return this.step() === 6;
   }
 
-  isTransferHintVisible(): boolean {
+  isIncomeHintVisible(): boolean {
     return this.step() === 7;
   }
 
-  isHistoryHintVisible(): boolean {
+  isTransferHintVisible(): boolean {
     return this.step() === 8;
+  }
+
+  isHistoryHintVisible(): boolean {
+    return this.step() === 9;
   }
 
   goToCurrentHint() {
@@ -82,20 +86,24 @@ export class WizardService {
       this.router.navigate(['/payment-methods']);
     }
 
+    if (this.isLimitHintVisible()) {
+      this.router.navigate(['/limits']);
+    }
+
     if (this.isIncomeCategoryHintVisible()) {
       this.router.navigate(['/income-categories']);
     }
 
     if (this.isExpenseHintVisible()) {
-      this.router.navigate(['/expenses']);
+      this.router.navigate(['/operations', { type: 'expense' }]);
     }
 
     if (this.isIncomeHintVisible()) {
-      this.router.navigate(['/income']);
+      this.router.navigate(['/operations', { type: 'income' }]);
     }
 
     if (this.isTransferHintVisible()) {
-      this.router.navigate(['/transfers']);
+      this.router.navigate(['/operations', { type: 'transfer' }]);
     }
 
     if (this.isHistoryHintVisible()) {

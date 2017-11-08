@@ -1,5 +1,4 @@
 import { Injectable, Injector } from '@angular/core';
-import { XHRBackend } from '@angular/http';
 
 import { HttpClientService } from "./http-client.service";
 import { DataEntity, DataService } from './data.service';

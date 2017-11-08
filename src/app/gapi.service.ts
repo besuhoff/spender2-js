@@ -1,5 +1,4 @@
 import { Injectable, Inject } from '@angular/core';
-import { DataEntity } from './data.service';
 
 export interface IGapi {
   load: (protocol: string, callback: ()=>any) => any,

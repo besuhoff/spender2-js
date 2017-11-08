@@ -18,7 +18,6 @@ interface HistoryItem {
   expense?: Expense;
   income?: Income;
   type: string; // 'expense' | 'income' | 'transfer';
-  routeName: string; // 'expenses' | 'income' | 'transfers';
   category: Category|IncomeCategory;
   createdAtDate: string;
   createdAtMonthId: string;
@@ -65,7 +64,6 @@ export class HistoryPageComponent implements OnInit {
           createdAt: createdAt,
           income: income,
           type: 'income',
-          routeName: 'income',
           category: income.incomeCategory,
           createdAtDate: createdAt.format('DD/MM, dddd'),
           createdAtMonthId: createdAt.format('YYYY-MM'),
@@ -80,7 +78,6 @@ export class HistoryPageComponent implements OnInit {
         if (income.sourceExpense) {
           entity.id = income.sourceExpense.id;
           entity.type = 'transfer';
-          entity.routeName = 'transfers';
           entity.expense = income.sourceExpense;
 
           entity.category = new Category({
@@ -106,7 +103,6 @@ export class HistoryPageComponent implements OnInit {
           createdAt: createdAt,
           expense: expense,
           type: 'expense',
-          routeName: 'expenses',
           category: expense.category,
           createdAtDate: createdAt.format('DD/MM, dddd'),
           createdAtMonthId: createdAt.format('YYYY-MM'),

@@ -21,7 +21,7 @@ export class UserService {
   }
 
   create(): Observable<User> {
-    return this._http.post(this._http.getUrl('users'), {}).map<User>(response => {
+    return this._http.post(this._http.getUrl('users'), {}).map(response => {
       this._user = response.json();
 
       return this._user;
@@ -29,7 +29,7 @@ export class UserService {
   };
 
   update(data: {}): Observable<User> {
-    return this._http.patch(this._http.getUrl('user'), data).map<User>(response => {
+    return this._http.patch(this._http.getUrl('user'), data).map(response => {
       this._user = response.json();
 
       return this._user;

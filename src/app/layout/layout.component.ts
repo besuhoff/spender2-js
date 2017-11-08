@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { GapiService } from '../gapi.service';
 import { PaymentMethod, PaymentMethodService } from '../payment-method.service';
 import { AuthService } from '../auth.service';
 import { WizardService } from '../wizard.service';
 import { UserService } from '../user.service';
 import { Profile } from '../gapi.service';
-import {HttpClientService} from "../http-client.service";
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
 import {Subscription} from "rxjs/Subscription";
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/pluck';
 
 @Component({
   selector: 'layout',
@@ -20,6 +21,7 @@ export class LayoutComponent implements OnInit {
   private paymentMethods: PaymentMethod[] = [];
   private paymentMethodsListChangedAt: Subscription;
   private profileImageStyle: SafeStyle;
+  public operationType$: Observable<string>;
 
   public getProfile(): Profile {
     return this.authService.getProfile();
@@ -47,7 +49,7 @@ export class LayoutComponent implements OnInit {
       private wizardService: WizardService,
       private userService: UserService,
       private router: Router,
-      private httpClientService: HttpClientService,
+      private route: ActivatedRoute,
       private sanitizer: DomSanitizer
       ) {
 
@@ -60,6 +62,8 @@ export class LayoutComponent implements OnInit {
     this.paymentMethodsListChangedAt = this.paymentMethodService.getListChangedAt().subscribe(() => {
       this.paymentMethods = this.paymentMethodService.getAll().filter((item) => !item._isRemoved);
     });
+
+    this.operationType$ = this.route.params.pluck('type');
   }
 
   ngOnInit() {

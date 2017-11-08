@@ -1,3 +1,3 @@
-<loader [hidden]="isLoaded"></loader>
+<loader *ngIf="getUser()" [hidden]="isLoaded"></loader>
 <router-outlet></router-outlet>
-<template ngbModalContainer></template>
+<ng-template ngbModalContainer></ng-template>
