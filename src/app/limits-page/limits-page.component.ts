@@ -3,6 +3,7 @@ import {WizardService} from "../wizard.service";
 import {Limit, LimitService} from "../limit.service";
 import {PaymentMethod, PaymentMethodService} from "../payment-method.service";
 import {Category, CategoryService} from "../category.service";
+import { Currency } from '../currency.service';
 import Timer = NodeJS.Timer;
 import {Observable} from "rxjs/Observable";
 
@@ -16,15 +17,15 @@ export class LimitsPageComponent implements OnInit {
   private isWizardLoading: boolean = false;
   private isWizardNextStepLoading: boolean = false;
   private isWizardCloseLoading: boolean = false;
-
-  private limit: Limit;
-  private limits: Limit[];
-  private paymentMethods: PaymentMethod[];
-  private categories: Category[];
-  private isNewLoaded: Observable<Limit>;
-  private isLoaded: { [propName: string]: Observable<Limit> } = {};
-  private selectedColors: string[];
   private _debounceTimeout: Timer;
+  private isLoaded: { [propName: string]: Observable<Limit> } = {};
+
+  public isNewLoaded: Observable<Limit>;
+  public limit: Limit;
+  public limits: Limit[];
+  public paymentMethods: PaymentMethod[];
+  public categories: Category[];
+  public selectedColors: string[];
 
   private _initLimits() {
     this.limits = this.limitService.getAll().filter(function(item) { return !item._isRemoved; });

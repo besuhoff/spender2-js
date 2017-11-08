@@ -14,10 +14,14 @@ const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR = {
   styleUrls: ['./colorpicker.component.scss']
 })
 export class ColorpickerComponent implements OnInit, ControlValueAccessor {
-  @Input() private disabledOptions: string[] = [];
+  @Input()
+  private disabledOptions: string[] = [];
+
   private _value: string;
-  private disabled: boolean;
-  private colors: string[] = [
+
+  public isOpen: boolean = false;
+  public disabled: boolean;
+  public colors: string[] = [
     "#67B4D2",
     "#73CF76",
     "#A5DCF2",

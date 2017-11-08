@@ -111,9 +111,9 @@
       <div class="button-hint">
         <div class="button-hint__inner">
           <button class="btn-primary btn-sm btn btn-inline"
-                  [disabled]="!limit.name || !limit.currency"
-                  (click)="addMethod()">Добавить средство</button>
-          <div class="button-hint__text" *ngIf="!limit.name || !limit.currency">
+                  [disabled]="!limit.name || !limit.paymentMethods.length"
+                  (click)="addLimit()">Добавить лимит</button>
+          <div class="button-hint__text" *ngIf="!limit.name || !limit.paymentMethods.length">
             Укажите
             <span *ngIf="!limit.name">название</span>
             <span *ngIf="!limit.name && !limit.currency">и</span>

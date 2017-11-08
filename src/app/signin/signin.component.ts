@@ -10,8 +10,10 @@ import {HttpClientService} from "../http-client.service";
   styleUrls: ['./signin.component.css']
 })
 export class SigninComponent implements OnInit {
-  @Output() signedIn = new EventEmitter();
-  private isLoading: boolean = false;
+  @Output()
+  public signedIn = new EventEmitter();
+
+  public isLoading: boolean = false;
 
   constructor(
     authService: AuthService,

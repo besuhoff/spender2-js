@@ -22,9 +22,6 @@ export class OperationsPageComponent implements OnInit {
   private isWizardNextStepLoading: boolean = false;
   private isWizardCloseLoading: boolean = false;
 
-  private editMode: boolean;
-
-  private loading: boolean = false;
   private incomes: Income[] = [];
   private lastMonthIncomes: Income[] = [];
 
@@ -33,6 +30,10 @@ export class OperationsPageComponent implements OnInit {
 
   private incomeServiceListChangedAt: Subscription;
   private expenseServiceListChangedAt: Subscription;
+
+  public loading: boolean = false;
+
+  public editMode: boolean;
 
   public entityType: 'income'|'expense'|'transfer';
 
