@@ -60,7 +60,7 @@
         </div>
 
         <div class="history__col history__actions">
-          <a class="fa fa-pencil fa-lg" [routerLink]="'/operations/' + record.type + '?id=' + record.id"></a><!--
+          <a class="fa fa-pencil fa-lg" [routerLink]="'/operations/' + record.type + '/id/' + record.id"></a><!--
         --><span class="fa fa-close fa-lg"
                  [class.active]="record.isMarkedForRemoval"
                  (click)="removeTransaction(record); $event.stopPropagation();"></span>

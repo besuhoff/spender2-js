@@ -25,6 +25,10 @@ const appRoutes: Routes = [
                 component: OperationsPageComponent
             },
             {
+                path: 'operations/:type/id/:id',
+                component: OperationsPageComponent
+            },
+            {
                 path: 'categories',
                 component: CategoriesPageComponent
             },
