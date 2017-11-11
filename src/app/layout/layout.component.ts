@@ -64,7 +64,7 @@ export class LayoutComponent implements OnInit {
       this.paymentMethods = this.paymentMethodService.getAll().filter((item) => !item._isRemoved);
     });
 
-    this.operationType$ = this.route.params.pluck('type');
+    this.operationType$ = this.route.firstChild.params.pluck('type');
   }
 
   ngOnInit() {
