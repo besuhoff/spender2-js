@@ -12,8 +12,8 @@
 
     <div class="collapse navbar-collapse" id="header-navbar" data-toggle="collapse" data-target="#header-navbar.collapse.in">
       <ul class="nav navbar-nav main-menu">
-        <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--operations">
-          <a [routerLink]="'/operations/' + (operationType$ | async)">Операции</a>
+        <li [class.active]="(operationType$ | async)" class="main-menu__tab main-menu__tab--operations">
+          <a [routerLink]="'/operations/' + ((operationType$ | async) || 'expense')">Операции</a>
         </li>
         <li [routerLinkActive]="['active']" class="main-menu__tab main-menu__tab--categories">
           <a routerLink="/categories">Категории</a>
