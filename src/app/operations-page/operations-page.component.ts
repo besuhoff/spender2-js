@@ -131,22 +131,13 @@ export class OperationsPageComponent implements OnInit {
     this.route.params
       .subscribe((params) => {
         this.entityType = params['type'];
-        this.startOfMonth = moment().startOf('month').toDate();
-        this._initIncomes();
-        this._initExpenses();
-
-        this._initIncome();
-        this._initExpense();
-        this._initTransfer();
-
-        this._initModels();
 
         if (params['id']) {
           this.editMode = true;
           switch (this.entityType) {
             case 'income': this.income = this.incomeService.getOne(+params['id']); break;
             case 'expense': this.expense = this.expenseService.getOne(+params['id']); break;
-            case 'transfer': 
+            case 'transfer':
               this.transferExpense = this.expenseService.getOne(+params['id']);
               this.transferIncome = this.transferExpense.targetIncome;
 
@@ -160,7 +151,17 @@ export class OperationsPageComponent implements OnInit {
 
               break;
           }
+        } else {
+          this._initIncome();
+          this._initExpense();
+          this._initTransfer();
         }
+
+        this.startOfMonth = moment().startOf('month').toDate();
+        this._initIncomes();
+        this._initExpenses();
+
+        this._initModels();
 
         this.incomeServiceListChangedAt = this.incomeService.getListChangedAt().subscribe(() => this._initIncomes());
         this.expenseServiceListChangedAt = this.expenseService.getListChangedAt().subscribe(() => this._initExpenses());
@@ -172,7 +173,7 @@ export class OperationsPageComponent implements OnInit {
 
   setEntityType(val: 'income'|'expense'|'transfer') {
     this.entityType = val;
-    this.router.navigate(['operations', val]);
+    history.pushState({}, null, this.router.serializeUrl(this.router.createUrlTree(['operations', val])));
   }
 
   getTargetAmount(): number | null {
