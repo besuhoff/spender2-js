@@ -5,5 +5,5 @@
 
 export const environment = {
   production: false,
-  apiUrl: '\'http://spender.pereborstudio.develop:8090\'',
+  apiUrl: 'http://spender.pereborstudio.develop:8090',
 };
