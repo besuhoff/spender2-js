@@ -9,6 +9,8 @@ import {PaymentMethod, PaymentMethodService} from "../payment-method.service";
 import {IncomeCategory, IncomeCategoryService} from "../income-category.service";
 import {Category, CategoryService} from "../category.service";
 import {Subscription} from 'rxjs/Subscription';
+import 'rxjs/add/operator/finally';
+import 'rxjs/add/operator/switchMap';
 
 @Component({
   selector: 'operations-page',
@@ -196,16 +198,16 @@ export class OperationsPageComponent implements OnInit {
 
       let update = !this.editMode ? this.incomeService.add(this.income.toUpdateData()) : this.incomeService.update(this.income);
 
-      update.subscribe(() => {
-        if (this.editMode) {
-          this.router.navigate(['/history']);
-        } else {
-          this._initIncome();
-          this._initModels();
-        }
-
-        this.loading = false;
-      });
+      update
+        .finally(() => this.loading = false)
+        .subscribe(() => {
+          if (this.editMode) {
+            this.router.navigate(['/history']);
+          } else {
+            this._initIncome();
+            this._initModels();
+          }
+        });
     }
   }
 
@@ -218,16 +220,16 @@ export class OperationsPageComponent implements OnInit {
 
       let update = !this.editMode ? this.expenseService.add(this.expense.toUpdateData()) : this.expenseService.update(this.expense);
 
-      update.subscribe(() => {
-        if (this.editMode) {
-          this.router.navigate(['/history']);
-        } else {
-          this._initExpense();
-          this._initModels();
-        }
-
-        this.loading = false;
-      });
+      update
+        .finally(() => this.loading = false)
+        .subscribe(() => {
+          if (this.editMode) {
+            this.router.navigate(['/history']);
+          } else {
+            this._initExpense();
+            this._initModels();
+          }
+        });
     }
   }
 
@@ -244,20 +246,21 @@ export class OperationsPageComponent implements OnInit {
 
       let update = !this.editMode ? this.incomeService.add(this.transferIncome.toUpdateData()) : this.incomeService.update(this.transferIncome);
 
-      update.subscribe((income) => {
-        this.transferExpense.targetIncome = income;
+      update
+        .switchMap((income) => {
+          this.transferExpense.targetIncome = income;
 
-        let update = !this.editMode ? this.expenseService.add(this.transferExpense.toUpdateData()) : this.expenseService.update(this.transferExpense);
-        update.subscribe(() => {
+          return !this.editMode ? this.expenseService.add(this.transferExpense.toUpdateData()) : this.expenseService.update(this.transferExpense);
+        })
+        .finally(() => this.loading = false)
+        .subscribe(() => {
           if (this.editMode) {
             this.router.navigate(['/history']);
           } else {
             this._initTransfer();
             this._initModels();
           }
-          this.loading = false;
         });
-      });
     }
   }
 
