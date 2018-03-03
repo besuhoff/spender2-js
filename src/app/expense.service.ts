@@ -13,9 +13,9 @@ export type ExpenseUpdateData = {
   userId: number,
   createdAt: Date,
   updatedAt: Date,
-  category?: CategoryUpdateData,
-  paymentMethod?: PaymentMethodUpdateData,
-  targetIncome?: IncomeUpdateData
+  categoryId?: number,
+  paymentMethodId?: number,
+  targetIncomeId?: number,
 };
 
 export class Expense extends DataEntity {
@@ -72,17 +72,20 @@ export class Expense extends DataEntity {
       comment: this.comment,
       userId: this.userId,
       createdAt: this.createdAt,
-      updatedAt: this.updatedAt
+      updatedAt: this.updatedAt,
+      categoryId: null,
+      paymentMethodId: null,
+      targetIncomeId: null,
     };
 
     if (this.category) {
-      data.category = this.category.toUpdateData();
+      data.categoryId = this.category.id;
     }
     if (this.paymentMethod) {
-      data.paymentMethod = this.paymentMethod.toUpdateData();
+      data.paymentMethodId = this.paymentMethod.id;
     }
     if (this.targetIncome) {
-      data.targetIncome = this.targetIncome.toUpdateData();
+      data.targetIncomeId = this.targetIncome.id;
     }
 
     return data;

@@ -14,7 +14,7 @@ export type PaymentMethodUpdateData = {
   expenses: number,
   initialAmount: number,
   _isRemoved?: boolean,
-  currency?: CurrencyUpdateData,
+  currencyId?: number,
   createdAt: Date,
   updatedAt: Date
 };
@@ -61,11 +61,12 @@ export class PaymentMethod extends DataEntity {
       incomes: this.incomes,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
-      _isRemoved: this._isRemoved
+      _isRemoved: this._isRemoved,
+      currencyId: null,
     };
 
     if (this.currency) {
-      data.currency = this.currency.toUpdateData();
+      data.currencyId = this.currency.id;
     }
 
     return data;
