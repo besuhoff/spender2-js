@@ -85,7 +85,6 @@ import { LimitsPageComponent } from './limits-page/limits-page.component';
   ],
   providers: [
     appRoutingProviders,
-    { provide: 'BACKEND_URL', useValue: 'https://spender-api.pereborstudio.com/' },
     { provide: 'GAPI_CLIENT_ID', useValue: '843225840486-ilkj47kggue9tvh6ajfvvog45mertgfg.apps.googleusercontent.com' },
     GapiService,
     ChartService,

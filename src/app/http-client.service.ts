@@ -4,10 +4,11 @@ import {GapiService} from "./gapi.service";
 import {Observable} from "rxjs/Observable";
 import "rxjs/add/observable/from";
 import "rxjs/add/operator/mergeMap";
+import { environment } from '../environments/environment';
 
 @Injectable()
 export class HttpClientService extends Http {
-  protected static get _baseUrl(): string { return 'https://spender-api.pereborstudio.com' };
+  protected static _baseUrl: string = environment.apiUrl;
 
   constructor (backend: XHRBackend, options: RequestOptions, private gapiService: GapiService) {
     super(backend, options);

@@ -13,8 +13,8 @@ export type IncomeUpdateData = {
   userId: number,
   createdAt: Date,
   updatedAt: Date,
-  incomeCategory?: IncomeCategoryUpdateData,
-  paymentMethod?: PaymentMethodUpdateData,
+  incomeCategoryId?: number,
+  paymentMethodId?: number,
 };
 
 export class Income extends DataEntity {
@@ -57,14 +57,16 @@ export class Income extends DataEntity {
       comment: this.comment,
       userId: this.userId,
       createdAt: this.createdAt,
-      updatedAt: this.updatedAt
+      updatedAt: this.updatedAt,
+      incomeCategoryId: null,
+      paymentMethodId: null,
     };
 
     if (this.incomeCategory) {
-      data.incomeCategory = this.incomeCategory.toUpdateData();
+      data.incomeCategoryId = this.incomeCategory.id;
     }
     if (this.paymentMethod) {
-      data.paymentMethod = this.paymentMethod.toUpdateData();
+      data.paymentMethodId = this.paymentMethod.id;
     }
 
     return data;

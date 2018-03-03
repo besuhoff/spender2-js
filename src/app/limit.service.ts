@@ -11,8 +11,8 @@ export type LimitUpdateData = {
   color: string,
   userId: number,
   _isRemoved?: boolean,
-  paymentMethods?: PaymentMethodUpdateData[],
-  categories?: CategoryUpdateData[],
+  paymentMethodIds?: number[],
+  categoryIds: number[],
   value: number,
   period: 'month'|'year',
   createdAt: Date,
@@ -64,15 +64,17 @@ export class Limit extends DataEntity {
       period: this.period,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
-      _isRemoved: this._isRemoved
+      _isRemoved: this._isRemoved,
+      categoryIds: [],
+      paymentMethodIds: [],
     };
 
     if (this.categories) {
-      data.categories = this.categories.map(category => category.toUpdateData());
+      data.categoryIds = this.categories.map(category => category.id);
     }
 
     if (this.paymentMethods) {
-      data.paymentMethods = this.paymentMethods.map(paymentMethod => paymentMethod.toUpdateData());
+      data.paymentMethodIds = this.paymentMethods.map(paymentMethod => paymentMethod.id);
     }
 
     return data;
