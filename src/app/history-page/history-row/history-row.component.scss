@@ -85,10 +85,15 @@ $payment-methods-width: 140px;
       &:after {
         margin-top: -10px;
         top: 50%;
-        left: -6px;
+        left: -15px;
         position: absolute;
-        content: '\021E3';
+        content: '';
+        display: block;
+        width: 20px;
+        height: 20px;
         font-size: 20px;
+        background-size: contain;
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAb1BMV…/UsIgPmiN34aR9I32jckFeZMliB8AIYQvACRpgizII2wtgvgVSqkkuKAAAAABJRU5ErkJggg==);
       }
     }
   }
