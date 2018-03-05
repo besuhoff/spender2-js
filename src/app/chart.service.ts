@@ -161,16 +161,16 @@ export class ChartService {
   };
 
   buildBalanceChart(expenses: Expense[], incomes: Income[], paymentMethods: PaymentMethod[]) {
-    let chartMap = {},
+    const chartMap = {},
       paymentMethodsMap = {},
       datesMap = {},
       totalsMap = {};
 
     // Get all transactions sorted by reverse date order to do a retrospective analysis
-    let transactions = incomes
-      .map(income => income.toUpdateData())
-      .concat(expenses.map((expense) => {
-        let e = expense.toUpdateData();
+    let transactions: (Expense | Income)[] = [];
+    transactions = transactions.concat(incomes);
+
+    transactions = transactions.concat(expenses.map((e) => {
         e.amount *= -1;
         return e;
       })).sort((a, b) => {

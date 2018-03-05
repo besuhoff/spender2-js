@@ -13,7 +13,7 @@
 
     <div class="button-holder m-b-n-sm">
       <span><button class="btn m-b-sm btn-primary" (click)="nextStep()" [disabled]="isWizardLoading" [ladda]="isWizardNextStepLoading">Перейти к настройкам доходов</button></span>
-      <span class="m-l-xs"><button class="btn m-b-sm btn-default " (click)="close()" [disabled]="isWizardLoading" [ladda]="isWizardCloseLoading">Мне больше не нужны подсказки</button></span>
+      <span class="m-l-xs"><button class="btn m-b-sm btn-secondary " (click)="close()" [disabled]="isWizardLoading" [ladda]="isWizardCloseLoading">Мне больше не нужны подсказки</button></span>
     </div>
   </div>
 </div>
@@ -66,7 +66,7 @@
 
       </colorpicker>
       <spinner [isLoaded]="isLoaded[limit.id]"></spinner>
-      <button class="btn-default btn-sm btn btn-inline" (click)="deleteLimit(limit)"><i class="fa fa-lg fa-remove"></i></button>
+      <button class="btn-secondary btn-sm btn btn-inline" (click)="deleteLimit(limit)"><i class="fa fa-lg fa-remove"></i></button>
     </li>
 
     <li>

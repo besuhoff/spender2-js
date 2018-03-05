@@ -1,7 +1,6 @@
-import { Component, OnInit, Input, forwardRef, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, forwardRef, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { NgbInputDatepicker, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker.module';
-import { NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap/timepicker/timepicker.module';
+import { NgbInputDatepicker, NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import * as moment from 'moment';
 
 const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR = {
@@ -19,7 +18,6 @@ const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR = {
 })
 export class DatetimeComponent implements OnInit, ControlValueAccessor {
   private _value: any = '';
-  private ngbDatepicker: NgbInputDatepicker;
 
   public date: NgbDateStruct;
   public time: NgbTimeStruct;

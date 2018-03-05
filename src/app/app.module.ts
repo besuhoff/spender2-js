@@ -47,6 +47,8 @@ import {LimitService} from "./limit.service";
 import { routing, appRoutingProviders } from './app.routing';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { LimitsPageComponent } from './limits-page/limits-page.component';
+import { DatetimerangeComponent } from './datetimerange/datetimerange.component';
+import { HighlightPipe } from './highlight.pipe';
 
 
 @NgModule({
@@ -68,7 +70,9 @@ import { LimitsPageComponent } from './limits-page/limits-page.component';
     ChartsPageComponent,
     LoginFormComponent,
     LimitsPageComponent,
-    OperationsPageComponent
+    OperationsPageComponent,
+    DatetimerangeComponent,
+    HighlightPipe,
   ],
   imports: [
     BrowserModule,

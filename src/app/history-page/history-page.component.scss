@@ -216,3 +216,18 @@
     }
   }
 }
+
+.history-navigation {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+
+  &__datetimerange {
+    flex: 1 1 auto;
+    max-width: 280px;
+  }
+
+  &__search {
+    flex: 0 0 auto;
+  }
+}

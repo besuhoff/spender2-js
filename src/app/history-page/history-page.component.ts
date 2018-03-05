@@ -6,11 +6,14 @@ import {Income, IncomeService} from "../income.service";
 import {IncomeCategory} from "../income-category.service";
 import {WizardService} from "../wizard.service";
 import * as moment from 'moment';
-import {PaymentMethod} from "../payment-method.service";
-import {Observable} from "rxjs/Observable";
+import {PaymentMethod} from '../payment-method.service';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/debounce';
 import {DataEntity} from "../data.service";
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 interface HistoryItem {
   id: number;
@@ -20,18 +23,12 @@ interface HistoryItem {
   type: string; // 'expense' | 'income' | 'transfer';
   category: Category|IncomeCategory;
   createdAtDate: string;
-  createdAtMonthId: string;
   createdAtFormattedCompact: string;
   comment: string;
   amounts: {
     paymentMethod: PaymentMethod,
     value: number
   }[];
-}
-
-interface MonthStruct {
-  id: string;
-  name: string;
 }
 
 @Component({
@@ -43,17 +40,23 @@ export class HistoryPageComponent implements OnInit {
 
   private isWizardLoading: boolean = false;
   private isWizardCloseLoading: boolean = false;
+  private _search$$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-  private monthsMap: {};
-
-  public currentMonth: string;
-  public months: MonthStruct[];
+  public fromDate: moment.Moment;
+  public toDate: moment.Moment;
+  public range: string;
   public history: HistoryItem[];
+
+  public set search(value: string) {
+    this._search$$.next(value);
+  }
+
+  public get search(): string {
+    return this._search$$.value;
+  }
 
   private _initHistory() {
     let history: HistoryItem[] = [];
-
-    this.monthsMap = {};
 
     history = history.concat(this.incomeService.getAll()
       .filter((item) => !item._isRemoved)
@@ -67,7 +70,6 @@ export class HistoryPageComponent implements OnInit {
           type: 'income',
           category: income.incomeCategory,
           createdAtDate: createdAt.format('DD/MM, dddd'),
-          createdAtMonthId: createdAt.format('YYYY-MM'),
           createdAtFormattedCompact: createdAt.format('HH:mm'),
           comment: income.comment,
           amounts: [{
@@ -106,7 +108,6 @@ export class HistoryPageComponent implements OnInit {
           type: 'expense',
           category: expense.category,
           createdAtDate: createdAt.format('DD/MM, dddd'),
-          createdAtMonthId: createdAt.format('YYYY-MM'),
           createdAtFormattedCompact: createdAt.format('HH:mm'),
           comment: expense.comment,
           amounts: [{
@@ -116,18 +117,16 @@ export class HistoryPageComponent implements OnInit {
         };
       }));
 
-    history.forEach((item) => {
-      if (!this.monthsMap[item.createdAtMonthId]) {
-        this.monthsMap[item.createdAtMonthId] = item.createdAt.format('MMM');
-      }
-    });
-
-    this.months = Object.keys(this.monthsMap).sort().reverse().map((monthId) => ({ id: monthId, name: this.monthsMap[monthId] }));
-
-    this.currentMonth = this.currentMonth || (this.months[0] && this.months[0].id);
-
     this.history = history
-      .filter((item) => item.createdAtMonthId === this.currentMonth)
+      .filter((item) => (
+        item.createdAt.isBetween(this.fromDate, this.toDate) &&
+        (!this.search ||
+          ((item.comment && item.comment.includes(this.search))
+            || (item.category && item.category.name.includes(this.search))
+            || (item.amounts.some(amount => amount.paymentMethod.name.includes(this.search)))
+          )
+        )
+      ))
       .sort((a, b) => {
         let diff = a.createdAt.diff(b.createdAt);
         return  diff < 0 ? 1 :
@@ -183,39 +182,47 @@ export class HistoryPageComponent implements OnInit {
     return this.wizardService.close().subscribe(() => { this.isWizardLoading = false; this.isWizardCloseLoading = false; });
   }
 
-  gotoMonth(month) {
-    if (month.id !== this.currentMonth) {
-      this.router.navigate(['/history', month.id]);
-    }
-  }
-
-  isFirstMonth() {
-    return this.months[0].id === this.currentMonth;
-  }
-
-  isLastMonth() {
-    return this.months[this.months.length - 1].id === this.currentMonth;
-  }
-
-  gotoPrevMonth() {
-    if (!this.isFirstMonth()) {
-      this.gotoMonth(this.months[this.months.map((month) => month.id).indexOf(this.currentMonth) - 1]);
-    }
-  }
-
-  gotoNextMonth() {
-    if (!this.isLastMonth()) {
-      this.gotoMonth(this.months[this.months.map((month) => month.id).indexOf(this.currentMonth) + 1]);
+  goToRange() {
+    if (this.fromDate && this.toDate) {
+      this.router.navigate(['history', `${this.fromDate.format('YYYY-MM-DD')}...${this.toDate.format('YYYY-MM-DD')}`]);
     }
   }
 
   ngOnInit() {
+    this._search$$.debounce(() => Observable.timer(300))
+      .subscribe((value: string) => {
+        this._initHistory();
+      });
+
     this.route.params
-      .map(params => params['month'])
-      .subscribe((month) => {
-        this.currentMonth = month;
+      .pluck('range')
+      .subscribe((range = '') => {
+        this.range = range.toString();
+
+        let [from, to] = this.range.split('...');
+
+        if (!from) {
+          this.fromDate = moment().startOf('month');
+        } else {
+          if (from.match(/^\d{4}-\d{2}$/)) {
+            from += '-01';
+          }
+
+          this.fromDate = moment(from, 'YYYY-MM-DD');
+        }
+
+
+        if (!to) {
+          this.toDate = moment(from).endOf('month');
+        } else {
+          if (to.match(/^\d{4}-\d{2}$/)) {
+            to += '-01';
+          }
+
+          this.toDate = moment(to, 'YYYY-MM-DD').endOf('day');
+        }
+
         this._initHistory();
       });
   }
-
 }

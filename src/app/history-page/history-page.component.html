@@ -17,26 +17,28 @@
   </div>
 </div>
 
-<h5 *ngIf="!history.length">
-  Вы не записали ни одной транзакции. Запишите <a [routerLink]="'/operations/income'">доход</a>, <a [routerLink]="'/operations/expense'">трату</a>
-  или <a [routerLink]="'/operations/transfer'">перевод</a>, чтобы увидеть историю платежей.
-</h5>
+<div class="text-center">
+  <div class="history-navigation" *ngIf="history.length || range || search">
+    <datetimerange class="history-navigation__datetimerange"
+                   [fromDate]="fromDate"
+                   [toDate]="toDate"
+                   (fromDateChange)="fromDate = $event; goToRange()"
+                   (toDateChange)="toDate = $event; goToRange()"></datetimerange>
 
-<div *ngIf="history.length" class="text-center">
-  <div class="history-navigation" *ngIf="months.length > 1">
-    <button class="btn btn-default"
-            (click)="gotoPrevMonth()"
-            [disabled]="isFirstMonth()">&larr;</button><!--
-    --><button class="btn btn-default"
-               [class.active]="month.id === currentMonth"
-               (click)="gotoMonth(month)"
-               *ngFor="let month of months">{{ month.name }}</button><!--
-    --><button class="btn btn-default"
-               (click)="gotoNextMonth()"
-               [disabled]="isLastMonth()">&rarr;</button>
+    <input [value] = "search" class="form-control form-control--sm history-navigation__search" (change)="search = $event.target.value">
   </div>
 
-  <div class="history text-left">
+  <h5 *ngIf="!history.length">
+    <span *ngIf="!range && !search">
+    Вы не записали ни одной транзакции. Запишите <a [routerLink]="'/operations/income'">доход</a>, <a [routerLink]="'/operations/expense'">трату</a>
+    или <a [routerLink]="'/operations/transfer'">перевод</a>, чтобы увидеть историю платежей.
+    </span>
+    <span *ngIf="range || search">
+      Таких транзакций не найдено. <span *ngIf="!search">Пожалуйста, выберите другой диапазон дат.</span><span *ngIf="search">Попробуйте другой поисковой запрос.</span>
+    </span>
+  </h5>
+
+  <div *ngIf="history.length" class="history text-left">
     <div class="history__header history__row">
       <div class="history__header-col history__date">Дата</div>
       <div class="history__header-col history__amounts">Сумма</div>
@@ -77,12 +79,11 @@
         </div>
         <div class="history__col history__payment-methods"
              [class.history__payment-methods--transfer]="record.type === 'transfer'">
-        <span class="history__payment-method" *ngFor="let amount of record.amounts">
-          {{amount.paymentMethod.name}}
-        </span>
+        <span class="history__payment-method" *ngFor="let amount of record.amounts" [innerHTML]="amount.paymentMethod.name | highlight:search"></span>
         </div>
         <div class="history__col history__category">
-          {{record.category.name}} <span class="comment" *ngIf="record.comment">({{record.comment}})</span>
+          <span [innerHTML]="record.category.name| highlight:search"></span>
+          <span class="comment" *ngIf="record.comment" [innerHTML]="'(' + (record.comment | highlight:search) + ')'"></span>
         </div>
       </div>
     </ng-container>
