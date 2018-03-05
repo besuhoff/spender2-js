@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, ViewEncapsulation } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {Expense, ExpenseService} from "../expense.service";
 import {Category} from "../category.service";
@@ -6,13 +6,16 @@ import {Income, IncomeService} from "../income.service";
 import {IncomeCategory} from "../income-category.service";
 import {WizardService} from "../wizard.service";
 import * as moment from 'moment';
-import {PaymentMethod} from "../payment-method.service";
-import {Observable} from "rxjs/Observable";
+import {PaymentMethod} from '../payment-method.service';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/debounce';
 import {DataEntity} from "../data.service";
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-interface HistoryItem {
+export interface HistoryItem {
   id: number;
   createdAt: moment.Moment;
   expense?: Expense;
@@ -20,7 +23,7 @@ interface HistoryItem {
   type: string; // 'expense' | 'income' | 'transfer';
   category: Category|IncomeCategory;
   createdAtDate: string;
-  createdAtMonthId: string;
+  createdAtYear: string;
   createdAtFormattedCompact: string;
   comment: string;
   amounts: {
@@ -29,31 +32,35 @@ interface HistoryItem {
   }[];
 }
 
-interface MonthStruct {
-  id: string;
-  name: string;
-}
-
 @Component({
   selector: 'history-page',
   templateUrl: './history-page.component.html',
-  styleUrls: ['./history-page.component.scss']
+  styleUrls: ['./history-page.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class HistoryPageComponent implements OnInit {
 
   private isWizardLoading: boolean = false;
   private isWizardCloseLoading: boolean = false;
+  private _search$$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-  private monthsMap: {};
+  public fromDate: moment.Moment;
+  public toDate: moment.Moment;
+  public range: string;
+  public history: HistoryItem[] = [];
+  public displayedHistory: HistoryItem[] = [];
+  public fullHistorySize: number;
 
-  public currentMonth: string;
-  public months: MonthStruct[];
-  public history: HistoryItem[];
+  public set search(value: string) {
+    this._search$$.next(value);
+  }
+
+  public get search(): string {
+    return this._search$$.value;
+  }
 
   private _initHistory() {
     let history: HistoryItem[] = [];
-
-    this.monthsMap = {};
 
     history = history.concat(this.incomeService.getAll()
       .filter((item) => !item._isRemoved)
@@ -67,7 +74,7 @@ export class HistoryPageComponent implements OnInit {
           type: 'income',
           category: income.incomeCategory,
           createdAtDate: createdAt.format('DD/MM, dddd'),
-          createdAtMonthId: createdAt.format('YYYY-MM'),
+          createdAtYear: createdAt.format('YYYY'),
           createdAtFormattedCompact: createdAt.format('HH:mm'),
           comment: income.comment,
           amounts: [{
@@ -106,7 +113,7 @@ export class HistoryPageComponent implements OnInit {
           type: 'expense',
           category: expense.category,
           createdAtDate: createdAt.format('DD/MM, dddd'),
-          createdAtMonthId: createdAt.format('YYYY-MM'),
+          createdAtYear: createdAt.format('YYYY'),
           createdAtFormattedCompact: createdAt.format('HH:mm'),
           comment: expense.comment,
           amounts: [{
@@ -116,24 +123,26 @@ export class HistoryPageComponent implements OnInit {
         };
       }));
 
-    history.forEach((item) => {
-      if (!this.monthsMap[item.createdAtMonthId]) {
-        this.monthsMap[item.createdAtMonthId] = item.createdAt.format('MMM');
-      }
-    });
-
-    this.months = Object.keys(this.monthsMap).sort().reverse().map((monthId) => ({ id: monthId, name: this.monthsMap[monthId] }));
-
-    this.currentMonth = this.currentMonth || (this.months[0] && this.months[0].id);
+    this.fullHistorySize = history.length;
 
     this.history = history
-      .filter((item) => item.createdAtMonthId === this.currentMonth)
+      .filter((item) => (
+        item.createdAt.isBetween(this.fromDate, this.toDate) &&
+        (!this.search ||
+          ((item.comment && this.search.split(/\s+/).some(term => item.comment.toLowerCase().includes(term.toLowerCase())))
+            || (item.category && this.search.split(/\s+/).some(term => item.category.name.toLowerCase().includes(term.toLowerCase())))
+            || (item.amounts.some(amount => this.search.split(/\s+/).some(term => amount.paymentMethod.name.toLowerCase().includes(term.toLowerCase()))))
+          )
+        )
+      ))
       .sort((a, b) => {
         let diff = a.createdAt.diff(b.createdAt);
         return  diff < 0 ? 1 :
           diff > 0 ? -1 :
             0;
       });
+
+    this.displayedHistory = this.history.slice(0, 50);
   }
 
   constructor(private expenseService: ExpenseService,
@@ -142,6 +151,12 @@ export class HistoryPageComponent implements OnInit {
               private router: Router,
               private injector: Injector,
               private route: ActivatedRoute) {
+  }
+
+  loadHistory() {
+    if (this.displayedHistory.length < this.history.length) {
+      this.displayedHistory = this.displayedHistory.concat(this.history.slice(this.displayedHistory.length, this.displayedHistory.length + 50));
+    }
   }
 
   removeTransaction(transaction) {
@@ -183,39 +198,47 @@ export class HistoryPageComponent implements OnInit {
     return this.wizardService.close().subscribe(() => { this.isWizardLoading = false; this.isWizardCloseLoading = false; });
   }
 
-  gotoMonth(month) {
-    if (month.id !== this.currentMonth) {
-      this.router.navigate(['/history', month.id]);
-    }
-  }
-
-  isFirstMonth() {
-    return this.months[0].id === this.currentMonth;
-  }
-
-  isLastMonth() {
-    return this.months[this.months.length - 1].id === this.currentMonth;
-  }
-
-  gotoPrevMonth() {
-    if (!this.isFirstMonth()) {
-      this.gotoMonth(this.months[this.months.map((month) => month.id).indexOf(this.currentMonth) - 1]);
-    }
-  }
-
-  gotoNextMonth() {
-    if (!this.isLastMonth()) {
-      this.gotoMonth(this.months[this.months.map((month) => month.id).indexOf(this.currentMonth) + 1]);
+  goToRange() {
+    if (this.fromDate && this.toDate) {
+      this.router.navigate(['history', `${this.fromDate.format('YYYY-MM-DD')}...${this.toDate.format('YYYY-MM-DD')}`]);
     }
   }
 
   ngOnInit() {
+    this._search$$.debounce(() => Observable.timer(300))
+      .subscribe((value: string) => {
+        this._initHistory();
+      });
+
     this.route.params
-      .map(params => params['month'])
-      .subscribe((month) => {
-        this.currentMonth = month;
+      .pluck('range')
+      .subscribe((range = '') => {
+        this.range = range.toString();
+
+        let [from, to] = this.range.split('...');
+
+        if (!from) {
+          this.fromDate = moment().startOf('month');
+        } else {
+          if (from.match(/^\d{4}-\d{2}$/)) {
+            from += '-01';
+          }
+
+          this.fromDate = moment(from, 'YYYY-MM-DD');
+        }
+
+
+        if (!to) {
+          this.toDate = this.fromDate.clone().endOf('month');
+        } else {
+          if (to.match(/^\d{4}-\d{2}$/)) {
+            to += '-01';
+          }
+
+          this.toDate = moment(to, 'YYYY-MM-DD').endOf('day');
+        }
+
         this._initHistory();
       });
   }
-
 }

@@ -49,7 +49,7 @@ const appRoutes: Routes = [
                 component: HistoryPageComponent
             },
             {
-                path: 'history/:month',
+                path: 'history/:range',
                 component: HistoryPageComponent
             },
             {

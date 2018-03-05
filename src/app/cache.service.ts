@@ -124,7 +124,7 @@ export class CacheService {
       this._isLoaded.next(false);
     }
 
-    return Observable.forkJoin([
+    return Observable.forkJoin<DataEntity[][]>([
       this.incomeCategoryService.loadAll()
         .map((data) => { if (!this.hasData()) { this.isPartLoaded.incomeCategories.next(true); } return data }),
       this.categoryService.loadAll()
