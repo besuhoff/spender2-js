@@ -9,6 +9,7 @@ import 'chart.js';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { LaddaModule } from 'angular2-ladda';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { AppComponent } from './app.component';
 import { CategoriesPageComponent } from './categories-page/categories-page.component';
@@ -49,6 +50,7 @@ import { LoginFormComponent } from './login-form/login-form.component';
 import { LimitsPageComponent } from './limits-page/limits-page.component';
 import { DatetimerangeComponent } from './datetimerange/datetimerange.component';
 import { HighlightPipe } from './highlight.pipe';
+import { HistoryRowComponent } from './history-page/history-row/history-row.component';
 
 
 @NgModule({
@@ -73,6 +75,7 @@ import { HighlightPipe } from './highlight.pipe';
     OperationsPageComponent,
     DatetimerangeComponent,
     HighlightPipe,
+    HistoryRowComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,6 +88,7 @@ import { HighlightPipe } from './highlight.pipe';
     NgbModule.forRoot(),
     ChartsModule,
     MomentModule,
+    InfiniteScrollModule,
     routing
   ],
   providers: [

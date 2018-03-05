@@ -10,149 +10,37 @@
   font-family: 'Fira Mono', monospace;
   border-spacing: 0;
 
-  .history__col, .history__header-col {
+  &__col, &__header-col {
     position: relative;
     float: left;
   }
 
-  .history__header-col {
+  &__header-col {
     font-size: 14px;
     font-weight: bold;
     color: inherit !important;
     padding: 0 5px 3px;
 
-    &.history__category {
+    &.history-row__category {
       margin-right: 0;
       left: 0;
     }
 
-    &.history__payment-methods {
+    &.history-row__payment-methods {
       margin-left: 0;
     }
   }
 
-  .history__col {
+  &__col {
     padding: 0 5px;
     line-height: 18px;
     font-size: 12px;
     word-wrap: break-word;
   }
 
-  &__row {
-    border: 1px solid transparent;
-
-    &:after {
-      display: block;
-      content: '';
-      clear: both;
-    }
-
-    &.highlighted {
-      background: #f8f8f8;
-      border-color: #dfdfdf;
-      padding: 2px 0;
-
-      + .history__row.highlighted {
-        border-top-color: transparent;
-      }
-    }
-
-    &-date {
-
-      .history__date {
-        font-weight: bold;
-        font-size: 13px;
-        padding: 9px 5px 3px;
-      }
-    }
-
-    .history__date {
-      white-space: nowrap;
-      width: $date-width;
-    }
-
-    .history__actions {
-      width: $actions-width;
-      padding-top: 0;
-      vertical-align: top;
-      text-align: right;
-      float: right;
-
-      .fa {
-        opacity: 0.5;
-        cursor: pointer;
-        text-decoration: none !important;
-        color: inherit;
-      }
-
-      .fa-close {
-        padding: 2px 0 0;
-        border: 0;
-        margin-left: 10px;
-        font-size: 19px;
-        line-height: 20px;
-
-        &.active {
-          color: #f00;
-          opacity: 1;
-        }
-      }
-    }
-
-    .history__category {
-      left: -$category-width -$payment-methods-width;
-      width: $category-width;
-      margin-right: -$category-width;
-    }
-
-    .history__payment-methods {
-      width: $payment-methods-width;
-      margin-left: $category-width;
-
-      .history__payment-method {
-        display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      &--transfer {
-        &:after {
-          margin-top: -10px;
-          top: 50%;
-          left: -6px;
-          position: absolute;
-          content: '\021E3';
-          font-size: 20px;
-        }
-      }
-    }
-
-    .history__amounts {
-      width: $amount-width;
-      text-align: right;
-
-      .history__amount {
-        color: #1f8c22;
-        display: block;
-
-        &--expense {
-          color: #c30000;
-        }
-      }
-    }
-
-    .history__action-confirm {
-      float: none;
-      color: #f00;
-      text-align: right;
-      font-size: 10px;
-    }
-  }
-
   @media(max-width: 766px) {
 
-    .history__category {
+    &__category {
       left: 0;
       width: auto;
       float: none;
@@ -162,20 +50,20 @@
       margin-right: $actions-width-compact;
     }
 
-    .history__payment-methods {
+    .history-row__payment-methods {
       width: calc(100% - #{$amount-width} - #{$date-width} - #{$actions-width-compact});
     }
 
-    .history__row {
+    &__row {
       margin-bottom: 5px;
       padding-bottom: 6px;
       box-shadow: inset 0 5px 0 5px #fff, inset 0 -1px 0 0 #dfdfdf;
     }
 
-    .history__row.highlighted {
+    &__row.highlighted {
       box-shadow: none;
 
-      .history__actions {
+      .history-row__actions {
         .fa-pencil {
           margin-top: 25px;
           margin-bottom: -25px;
@@ -188,20 +76,20 @@
       }
     }
 
-    .history__row.highlighted + .history__row.highlighted {
+    .history-row--highlighted + .history-row--highlighted {
       margin-top: -5px;
       padding-top: 7px;
     }
 
-    .history__header-col.history__category {
+    &__header-col.history-row__category {
       display: none;
     }
 
-    .history__payment-methods {
+    .history-row__payment-methods {
       margin-left: 0;
     }
 
-    .history__actions {
+    .history-row__actions {
       width: $actions-width-compact;
 
       .fa-pencil {

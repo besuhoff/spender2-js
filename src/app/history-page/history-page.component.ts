@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector } from '@angular/core';
+import { Component, OnInit, Injector, ViewEncapsulation } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {Expense, ExpenseService} from "../expense.service";
 import {Category} from "../category.service";
@@ -15,7 +15,7 @@ import 'rxjs/add/operator/debounce';
 import {DataEntity} from "../data.service";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-interface HistoryItem {
+export interface HistoryItem {
   id: number;
   createdAt: moment.Moment;
   expense?: Expense;
@@ -23,6 +23,7 @@ interface HistoryItem {
   type: string; // 'expense' | 'income' | 'transfer';
   category: Category|IncomeCategory;
   createdAtDate: string;
+  createdAtYear: string;
   createdAtFormattedCompact: string;
   comment: string;
   amounts: {
@@ -34,7 +35,8 @@ interface HistoryItem {
 @Component({
   selector: 'history-page',
   templateUrl: './history-page.component.html',
-  styleUrls: ['./history-page.component.scss']
+  styleUrls: ['./history-page.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class HistoryPageComponent implements OnInit {
 
@@ -45,7 +47,9 @@ export class HistoryPageComponent implements OnInit {
   public fromDate: moment.Moment;
   public toDate: moment.Moment;
   public range: string;
-  public history: HistoryItem[];
+  public history: HistoryItem[] = [];
+  public displayedHistory: HistoryItem[] = [];
+  public fullHistorySize: number;
 
   public set search(value: string) {
     this._search$$.next(value);
@@ -70,6 +74,7 @@ export class HistoryPageComponent implements OnInit {
           type: 'income',
           category: income.incomeCategory,
           createdAtDate: createdAt.format('DD/MM, dddd'),
+          createdAtYear: createdAt.format('YYYY'),
           createdAtFormattedCompact: createdAt.format('HH:mm'),
           comment: income.comment,
           amounts: [{
@@ -108,6 +113,7 @@ export class HistoryPageComponent implements OnInit {
           type: 'expense',
           category: expense.category,
           createdAtDate: createdAt.format('DD/MM, dddd'),
+          createdAtYear: createdAt.format('YYYY'),
           createdAtFormattedCompact: createdAt.format('HH:mm'),
           comment: expense.comment,
           amounts: [{
@@ -117,13 +123,15 @@ export class HistoryPageComponent implements OnInit {
         };
       }));
 
+    this.fullHistorySize = history.length;
+
     this.history = history
       .filter((item) => (
         item.createdAt.isBetween(this.fromDate, this.toDate) &&
         (!this.search ||
-          ((item.comment && item.comment.includes(this.search))
-            || (item.category && item.category.name.includes(this.search))
-            || (item.amounts.some(amount => amount.paymentMethod.name.includes(this.search)))
+          ((item.comment && this.search.split(/\s+/).some(term => item.comment.toLowerCase().includes(term.toLowerCase())))
+            || (item.category && this.search.split(/\s+/).some(term => item.category.name.toLowerCase().includes(term.toLowerCase())))
+            || (item.amounts.some(amount => this.search.split(/\s+/).some(term => amount.paymentMethod.name.toLowerCase().includes(term.toLowerCase()))))
           )
         )
       ))
@@ -133,6 +141,8 @@ export class HistoryPageComponent implements OnInit {
           diff > 0 ? -1 :
             0;
       });
+
+    this.displayedHistory = this.history.slice(0, 50);
   }
 
   constructor(private expenseService: ExpenseService,
@@ -141,6 +151,12 @@ export class HistoryPageComponent implements OnInit {
               private router: Router,
               private injector: Injector,
               private route: ActivatedRoute) {
+  }
+
+  loadHistory() {
+    if (this.displayedHistory.length < this.history.length) {
+      this.displayedHistory = this.displayedHistory.concat(this.history.slice(this.displayedHistory.length, this.displayedHistory.length + 50));
+    }
   }
 
   removeTransaction(transaction) {
@@ -213,7 +229,7 @@ export class HistoryPageComponent implements OnInit {
 
 
         if (!to) {
-          this.toDate = moment(from).endOf('month');
+          this.toDate = this.fromDate.clone().endOf('month');
         } else {
           if (to.match(/^\d{4}-\d{2}$/)) {
             to += '-01';
