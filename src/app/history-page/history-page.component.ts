@@ -30,6 +30,7 @@ export interface HistoryItem {
     paymentMethod: PaymentMethod,
     value: number
   }[];
+  isMarkedForRemoval?: boolean;
 }
 
 @Component({
