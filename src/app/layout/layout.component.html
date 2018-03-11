@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-inverse navbar-dark bg-primary fixed-top">
+<nav class="navbar navbar-expand-lg navbar-inverse navbar-dark bg-dark fixed-top">
   <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -7,8 +7,8 @@
   <div class="collapse navbar-collapse" id="navbarsExampleDefault">
     <ul class="navbar-nav mr-auto">
 
-      <li [class.active]="(operationType$ | async)" class="nav-item main-menu__tab main-menu__tab--operations">
-        <a class="nav-link" [routerLink]="'/operations/' + ((operationType$ | async) || 'expense')">Операции</a>
+      <li [routerLinkActive]="['active']" class="nav-item main-menu__tab main-menu__tab--operations">
+        <a class="nav-link" routerLink="/operations">Операции</a>
       </li>
       <li [routerLinkActive]="['active']" class="nav-item main-menu__tab main-menu__tab--categories">
         <a class="nav-link" routerLink="/categories">Категории</a>
@@ -50,12 +50,12 @@
 </nav>
 
 <div class="container navbar-padded">
-  <div class="media header" *ngIf="getProfile()">
+  <div class="media header" *ngIf="profile$ | async">
     <div class="media-left">
       <div class="media-object user-avatar" [style]="profileImageStyle"></div>
     </div>
     <div class="media-body">
-      <h4 class="media-heading">Хэй, {{getProfile().getGivenName()}}!</h4>
+      <h4 class="media-heading">Хэй, {{(profile$ | async).getGivenName()}}!</h4>
       <a (click)="signOut(); $event.preventDefault();" href=""><i class="fa fa-sign-out fa-lg"></i> Выйти</a>
     </div>
   </div>

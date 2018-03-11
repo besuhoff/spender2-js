@@ -1,15 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { GapiService } from '../gapi.service';
+import { GapiService, Profile } from '../gapi.service';
 import { PaymentMethod, PaymentMethodService } from '../payment-method.service';
 import { AuthService } from '../auth.service';
 import { WizardService } from '../wizard.service';
 import { UserService } from '../user.service';
-import { Profile } from '../gapi.service';
 import {DomSanitizer, SafeStyle} from '@angular/platform-browser';
-import {Subscription} from "rxjs/Subscription";
+import {Subscription} from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/pluck';
+import 'rxjs/add/operator/filter';
 
 @Component({
   selector: 'layout',
@@ -22,11 +21,7 @@ export class LayoutComponent implements OnInit {
 
   public profileImageStyle: SafeStyle;
   public paymentMethods: PaymentMethod[] = [];
-  public operationType$: Observable<string>;
-
-  public getProfile(): Profile {
-    return this.authService.getProfile();
-  }
+  public profile$: Observable<Profile>;
 
   public signOut(): void {
     this.gapiService.load().then(gapi => {
@@ -52,22 +47,22 @@ export class LayoutComponent implements OnInit {
       private router: Router,
       private route: ActivatedRoute,
       private sanitizer: DomSanitizer
-      ) {
+      ) { }
 
-    this.profileImageStyle = this.sanitizer.bypassSecurityTrustStyle(
-      `background-image: url(${this.getProfile().getImageUrl()})`
-    );
+  ngOnInit() {
+    this.profile$ = this.authService.profile$.filter(profile => !!profile);
+
+    this.profile$.subscribe(profile => {
+      this.profileImageStyle = this.sanitizer.bypassSecurityTrustStyle(
+        `background-image: url(${profile.getImageUrl()})`
+      );
+    });
 
     this.paymentMethods = this.paymentMethodService.getAll().filter((item) => !item._isRemoved);
 
     this.paymentMethodsListChangedAt = this.paymentMethodService.getListChangedAt().subscribe(() => {
       this.paymentMethods = this.paymentMethodService.getAll().filter((item) => !item._isRemoved);
     });
-
-    this.operationType$ = this.route.firstChild.params.pluck('type');
-  }
-
-  ngOnInit() {
   }
 
   ngOnDestroy() {

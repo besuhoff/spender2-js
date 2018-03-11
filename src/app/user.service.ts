@@ -21,7 +21,7 @@ export class UserService {
   }
 
   create(): Observable<User> {
-    return this._http.post(this._http.getUrl('users'), {}).map(response => {
+    return this._http.put(this._http.getUrl('user'), {}).map(response => {
       this._user = response.json();
 
       return this._user;

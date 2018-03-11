@@ -12,6 +12,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/timer';
 import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/pluck';
 import {DataEntity} from "../data.service";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 

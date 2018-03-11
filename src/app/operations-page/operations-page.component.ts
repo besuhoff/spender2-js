@@ -132,7 +132,7 @@ export class OperationsPageComponent implements OnInit {
   ngOnInit() {
     this.route.params
       .subscribe((params) => {
-        this.entityType = params['type'];
+        this.setEntityType(params['type'] || 'expense');
 
         if (params['id']) {
           this.editMode = true;

@@ -21,6 +21,10 @@ const appRoutes: Routes = [
         canActivateChild: [AuthGuard],
         children: [
             {
+                path: 'operations',
+                component: OperationsPageComponent
+            },
+            {
                 path: 'operations/:type',
                 component: OperationsPageComponent
             },
@@ -63,7 +67,7 @@ const appRoutes: Routes = [
             }
         ]
     },
-    { path: '**', component: LayoutComponent }
+    { path: '**', redirectTo: '' }
 ];
 
 export const appRoutingProviders: any[] = [
