@@ -4,31 +4,32 @@ import 'rxjs/add/operator/map';
 import { Profile } from './gapi.service';
 import { UserService } from './user.service';
 import { CacheService } from './cache.service';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 @Injectable()
 export class AuthService {
-  private _profile: Profile;
+  private _profile$$: ReplaySubject<Profile> = new ReplaySubject<Profile>(1);
 
   constructor(
     private userService: UserService,
     private cacheService: CacheService
   ) { }
 
-  getProfile(): Profile {
-    return this._profile;
+  get profile$(): Observable<Profile> {
+    return this._profile$$.asObservable();
   };
 
   setProfile(profile: Profile): Observable<Profile> {
     return this.userService.create()
       .map(() => {
         this.cacheService.loadAll().subscribe();
-        this._profile = profile;
+        this._profile$$.next(profile);
         return profile;
       });
   };
 
   reset(): void {
-    this._profile = undefined;
+    this._profile$$.next(null);
     this.cacheService.resetAll();
   }
 }
