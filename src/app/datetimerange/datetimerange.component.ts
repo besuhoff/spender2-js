@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { NgbDatepicker, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 
 const equals = (one: NgbDateStruct, two: NgbDateStruct) =>
   one && two && two.year === one.year && two.month === one.month && two.day === one.day;

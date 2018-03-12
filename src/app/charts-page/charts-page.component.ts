@@ -3,7 +3,7 @@ import {PaymentMethod, PaymentMethodService} from "../payment-method.service";
 import {Expense, ExpenseService} from "../expense.service";
 import {Income, IncomeService} from "../income.service";
 import {ChartService} from "../chart.service";
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 
 @Component({
   selector: 'charts-page',

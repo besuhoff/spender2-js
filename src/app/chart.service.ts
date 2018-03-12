@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 import {Expense} from "./expense.service";
 import {Income} from "./income.service";
 import {PaymentMethod} from "./payment-method.service";

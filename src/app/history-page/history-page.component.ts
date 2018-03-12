@@ -5,7 +5,7 @@ import {Category} from "../category.service";
 import {Income, IncomeService} from "../income.service";
 import {IncomeCategory} from "../income-category.service";
 import {WizardService} from "../wizard.service";
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 import {PaymentMethod} from '../payment-method.service';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';

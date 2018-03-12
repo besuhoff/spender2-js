@@ -1,7 +1,7 @@
 import { Component, OnInit, forwardRef, ViewEncapsulation } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NgbInputDatepicker, NgbDateStruct, NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 
 const CUSTOM_INPUT_CONTROL_VALUE_ACCESSOR = {
   provide: NG_VALUE_ACCESSOR,
