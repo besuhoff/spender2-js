@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule, XHRBackend, RequestOptions } from '@angular/http';
 
 import 'moment/locale/ru';
+import * as moment from 'moment-timezone';
 import {MomentModule} from 'angular2-moment';
 import 'chart.js';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
@@ -52,6 +53,8 @@ import { DatetimerangeComponent } from './datetimerange/datetimerange.component'
 import { HighlightPipe } from './highlight.pipe';
 import { HistoryRowComponent } from './history-page/history-row/history-row.component';
 
+
+moment.tz.setDefault();
 
 @NgModule({
   declarations: [
