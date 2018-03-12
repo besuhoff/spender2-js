@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import {WizardService} from "../wizard.service";
 import {Income, IncomeService} from "../income.service";
 import {Expense, ExpenseService} from "../expense.service";
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 import {ChartService} from "../chart.service";
 import {PaymentMethod, PaymentMethodService} from "../payment-method.service";
 import {IncomeCategory, IncomeCategoryService} from "../income-category.service";

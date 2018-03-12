@@ -7,7 +7,7 @@ import {ChartService} from "../chart.service";
 import {IncomeCategory, IncomeCategoryService} from "../income-category.service";
 import {PaymentMethod, PaymentMethodService} from "../payment-method.service";
 import Timer = NodeJS.Timer;
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 import {Observable} from "rxjs/Observable";
 
 @Component({

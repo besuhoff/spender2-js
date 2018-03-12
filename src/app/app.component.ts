@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 import {Subscription} from "rxjs/Subscription";
 import {CacheService} from "./cache.service";
 import {UserService, User} from './user.service';
