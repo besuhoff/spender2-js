@@ -29,7 +29,8 @@ export interface HistoryItem {
   comment: string;
   amounts: {
     paymentMethod: PaymentMethod,
-    value: number
+    value: number,
+    balance?: number,
   }[];
   isMarkedForRemoval?: boolean;
 }
@@ -127,7 +128,29 @@ export class HistoryPageComponent implements OnInit {
 
     this.fullHistorySize = history.length;
 
+    history = history
+      .sort((a, b) => {
+        let diff = a.createdAt.diff(b.createdAt);
+        return  diff > 0 ? 1 :
+          diff < 0 ? -1 :
+            0;
+      });
+
+    const balanceMap = {};
+
+    history.forEach(item => {
+      item.amounts.forEach(amount => {
+        if (!balanceMap[amount.paymentMethod.id]) {
+          balanceMap[amount.paymentMethod.id] = amount.paymentMethod.initialAmount;
+        }
+
+        balanceMap[amount.paymentMethod.id] += amount.value;
+        amount.balance = balanceMap[amount.paymentMethod.id];
+      })
+    });
+
     this.history = history
+      .reverse()
       .filter((item) => (
         item.createdAt.isBetween(this.fromDate, this.toDate) &&
         (!this.search ||
@@ -136,13 +159,7 @@ export class HistoryPageComponent implements OnInit {
             || (item.amounts.some(amount => this.search.split(/\s+/).some(term => amount.paymentMethod.name.toLowerCase().includes(term.toLowerCase()))))
           )
         )
-      ))
-      .sort((a, b) => {
-        let diff = a.createdAt.diff(b.createdAt);
-        return  diff < 0 ? 1 :
-          diff > 0 ? -1 :
-            0;
-      });
+      ));
 
     this.displayedHistory = this.history.slice(0, 50);
   }

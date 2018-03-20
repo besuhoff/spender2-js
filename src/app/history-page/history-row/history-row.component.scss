@@ -1,4 +1,4 @@
-$category-width: 250px;
+$category-width: 210px;
 $amount-width: 100px;
 $date-width: 46px;
 $actions-width: 56px;
@@ -120,10 +120,76 @@ $payment-methods-width: 140px;
     }
   }
 
+  &__balance {
+    color: #808080;
+  }
+
   &__action-confirm {
     float: none;
     color: #f00;
     text-align: right;
     font-size: 10px;
+  }
+
+  @media(max-width: 767px) {
+
+    margin-bottom: 5px;
+    padding-bottom: 6px;
+    box-shadow: inset 0 5px 0 5px #fff, inset 0 -1px 0 0 #dfdfdf;
+
+    &--highlighted {
+      box-shadow: none;
+
+      & + & {
+        margin-top: -5px;
+        padding-top: 7px;
+      }
+
+
+      .history-row__actions {
+        .fa-pencil {
+          margin-top: 25px;
+          margin-bottom: -25px;
+        }
+
+        .fa-close {
+          margin-left: 0;
+          margin-top: -15px;
+        }
+      }
+    }
+
+    &__category {
+      left: 0;
+      width: auto;
+      float: none;
+      clear: left;
+      font-size: 11px;
+      color: #808080;
+      margin-right: $actions-width-compact;
+    }
+
+    &__payment-methods {
+      width: calc(100% - #{$amount-width} - #{$date-width} - #{$actions-width-compact});
+      margin-left: 0;
+    }
+
+    &__category.history__header-col, &__balances {
+      display: none;
+    }
+
+    &__actions {
+      width: $actions-width-compact;
+
+      .fa-pencil {
+        position: absolute;
+        margin-top: 22px;
+      }
+
+      .fa-close {
+        margin-left: 0;
+        margin-top: -18px;
+      }
+    }
   }
 }

@@ -7,19 +7,22 @@
 
   <div class="history__col history-row__actions">
     <a class="fa fa-pencil fa-lg" [routerLink]="'/operations/' + record.type + '/id/' + record.id"></a><!--
-        --><span class="fa fa-close fa-lg"
-                 [class.active]="record.isMarkedForRemoval"
-                 (click)="remove.emit(record); $event.stopPropagation();"></span>
+    --><span class="fa fa-close fa-lg"
+             [class.active]="record.isMarkedForRemoval"
+             (click)="remove.emit(record); $event.stopPropagation();"></span>
   </div>
   <div class="history__col history-row__date">
     <span>{{record.createdAtFormattedCompact}}</span>
   </div>
   <div class="history__col history-row__amounts">
-        <span class="history-row__amount"
-              *ngFor="let amount of record.amounts"
-              [class.history-row__amount--expense]="amount.value < 0">
-          {{amount.paymentMethod.currency.symbol}}{{ (amount.value < 0 ? -amount.value : amount.value) | number:'1.2-2' }}
-        </span>
+    <span class="history-row__amount"
+          *ngFor="let amount of record.amounts"
+          [class.history-row__amount--expense]="amount.value < 0">
+      {{amount.paymentMethod.currency.symbol}}{{ (amount.value < 0 ? -amount.value : amount.value) | number:'1.2-2' }}
+    </span>
+  </div>
+  <div class="history__col history-row__amounts history-row__balances">
+    <span class="history-row__amount history-row__balance" *ngFor="let amount of record.amounts">({{amount.paymentMethod.currency.symbol}}{{ amount.balance | number:'1.2-2' }})</span>
   </div>
   <div class="history__col history-row__payment-methods"
        [class.history-row__payment-methods--transfer]="record.type === 'transfer'">
